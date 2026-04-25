@@ -2,8 +2,7 @@
 
 import { motion } from 'framer-motion'
 
-const logos = ['Notion', 'Vercel', 'Linear', 'Figma', 'Stripe', 'Loom', 'OpenAI', 'Anthropic']
-// duplicate array for seamless marquee
+const logos = ['CapCut', 'Premiere Pro', 'DaVinci Resolve', 'Final Cut', 'YouTube', 'TikTok', 'Instagram', 'Spotify']
 const marqueeItems = [...logos, ...logos, ...logos]
 
 export default function LogoBar() {
@@ -19,7 +18,7 @@ export default function LogoBar() {
         background: 'rgba(255,255,255,0.01)',
       }}
     >
-      {/* Fade masks for edges */}
+      {/* Fade masks */}
       <div
         style={{
           position: 'absolute',
@@ -50,7 +49,7 @@ export default function LogoBar() {
             fontFamily: 'var(--font-heading)',
           }}
         >
-          Trusted by pioneering teams
+          Exports directly to your favourite tools
         </p>
       </div>
 
@@ -68,7 +67,7 @@ export default function LogoBar() {
             <div
               key={i}
               style={{
-                fontSize: '24px',
+                fontSize: '22px',
                 fontWeight: 700,
                 letterSpacing: '-0.5px',
                 color: 'var(--foreground)',

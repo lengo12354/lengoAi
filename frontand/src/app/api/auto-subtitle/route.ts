@@ -49,8 +49,8 @@ function wordsToSrt(words: Word[]): string {
 
     const gap = i > 0 ? w.start - prevEnd : 0
 
-    // New subtitle when there's a significant pause
-    if (gap > PAUSE_THRESHOLD && currentWords.length > 0) {
+    // New subtitle when there's a significant pause OR block is too long
+    if ((gap > PAUSE_THRESHOLD || currentWords.length >= 10) && currentWords.length > 0) {
       lines.push({ start: lineStart, end: prevEnd, text: currentWords.join(' ') })
       currentWords = []
       lineStart = w.start
@@ -193,10 +193,13 @@ export async function POST(req: Request) {
               role: 'system',
               content: `You are a Moroccan Darija transcription corrector.
 Fix errors, split merged words, and convert to natural Darija.
-Keep timestamps EXACT.
-Do not translate.
-If unclear, write [غير واضح].
-Return only SRT.`
+STRICT RULES:
+1. Keep ALL index numbers and timestamps EXACTLY as they are.
+2. DO NOT MERGE lines or blocks together.
+3. DO NOT add any punctuation (no periods, commas, or question marks). Strip them if present.
+4. Do not translate to other languages.
+5. If unclear, write [غير واضح].
+Return ONLY valid SRT. No markdown.`
             },
             { role: 'user', content: arabicSrt }
           ],
@@ -217,17 +220,15 @@ Convert SRT subtitle text from Arabic script to Moroccan Darija written in Latin
 
 STRICT RULES:
 1. Fix errors, split merged words, and convert to natural Darija.
-2. Read the full transcript first before translating.
-3. Keep the Moroccan personality and humor.
-4. Use common Darija words: واش، بزاف، دابا، خاصك، كاين
-5. Never use Fusha words if a Darija equivalent exists.
-6. Keep ALL index numbers EXACTLY (e.g. "1", "2")
-7. Keep ALL timestamps EXACTLY (e.g. "00:00:01,500 --> 00:00:03,200")
-8. ONLY convert the Arabic text lines to Franco/Latin — do NOT change timestamps or numbers
-9. Do NOT translate to French or English — write how Moroccans pronounce it in Latin letters
-10. Franco rules: ع=3, خ=kh, ش=ch, ح=7, غ=gh, ق=9, ر=r
-11. Examples: "صافي"→"safi", "واش"→"wach", "دابا"→"daba", "آخاي"→"akhay", "ماشي"→"machi", "بزاف"→"bzzaf"
-12. Output ONLY valid SRT. No explanations, no markdown.`
+2. DO NOT MERGE lines or blocks together.
+3. DO NOT add any punctuation (no periods, commas, or question marks). Strip them if present.
+4. Keep ALL index numbers EXACTLY (e.g. "1", "2")
+5. Keep ALL timestamps EXACTLY (e.g. "00:00:01,500 --> 00:00:03,200")
+6. ONLY convert the Arabic text lines to Franco/Latin — do NOT change timestamps or numbers
+7. Do NOT translate to French or English — write how Moroccans pronounce it in Latin letters
+8. Franco rules: ع=3, خ=kh, ش=ch, ح=7, غ=gh, ق=9, ر=r
+9. Examples: "صافي"→"safi", "واش"→"wach", "دابا"→"daba", "آخاي"→"akhay", "ماشي"→"machi", "بزاف"→"bzzaf"
+10. Output ONLY valid SRT. No explanations, no markdown.`
             },
             { role: 'user', content: arabicSrt }
           ],

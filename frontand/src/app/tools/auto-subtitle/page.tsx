@@ -2,8 +2,9 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { UploadCloud, FileAudio, Loader2, CheckCircle2, Download, ArrowLeft, AlertCircle, Captions, FileText, RefreshCcw } from 'lucide-react'
+import { UploadCloud, FileAudio, Loader2, CheckCircle2, Download, ArrowLeft, AlertCircle, Captions, FileText, RefreshCcw, Zap } from 'lucide-react'
 import Link from 'next/link'
+import { checkAndDeductTokens, getUserTokens } from '@/app/actions/tokens'
 
 type Language = 'darija_ar' | 'darija_fr' | 'other'
 
@@ -70,14 +71,20 @@ export default function AutoSubtitlePage() {
   const [processingMsg, setProcessingMsg] = useState(PROCESSING_MESSAGES[0])
   const [currentTime, setCurrentTime] = useState(0)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
+  const [audioDuration, setAudioDuration] = useState<number>(0)
+  const [tokens, setTokens] = useState<number | null>(null)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const processingInterval = useRef<ReturnType<typeof setInterval> | null>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
   const activeSubRef = useRef<HTMLDivElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
 
   const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
+  useEffect(() => {
+    setMounted(true)
+    getUserTokens().then(t => setTokens(t))
+  }, [])
 
   // Find active subtitle index
   const activeIdx = subtitles.findIndex(s => currentTime >= s.start && currentTime <= s.end)
@@ -92,7 +99,16 @@ export default function AutoSubtitlePage() {
   // Auto-scroll to active subtitle
   useEffect(() => {
     if (activeSubRef.current) {
-      activeSubRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+      const rect = activeSubRef.current.getBoundingClientRect()
+      const windowHeight = window.innerHeight
+      
+      // Only scroll down if the element is going off the bottom of the screen
+      if (rect.bottom > windowHeight - 50) {
+        window.scrollBy({
+          top: rect.bottom - windowHeight + 150, // Scroll just enough to show it clearly
+          behavior: 'smooth'
+        })
+      }
     }
   }, [activeIdx])
 
@@ -118,11 +134,18 @@ export default function AutoSubtitlePage() {
     if (!validExtensions.some(ext => selectedFile.name.toLowerCase().endsWith(ext))) {
       setError('Unsupported format. Please upload an audio or video file.'); return
     }
-    if (selectedFile.size > 200 * 1024 * 1024) {
-      setError('File size exceeds 200MB limit.'); return
+    if (selectedFile.size > 25 * 1024 * 1024) {
+      setError('File size exceeds 25MB limit (Groq API limit).'); return
     }
     setFile(selectedFile)
-    setAudioUrl(URL.createObjectURL(selectedFile))
+    const url = URL.createObjectURL(selectedFile)
+    setAudioUrl(url)
+    
+    // Calculate audio duration
+    const audio = new Audio(url)
+    audio.addEventListener('loadedmetadata', () => {
+      setAudioDuration(audio.duration)
+    })
   }
 
   const startProcessingMessages = () => {
@@ -141,6 +164,17 @@ export default function AutoSubtitlePage() {
   const handleGenerate = async () => {
     if (!file) return
     setError(null); setIsProcessing(true); startProcessingMessages()
+
+    const tokenRes = await checkAndDeductTokens(audioDuration)
+    if (!tokenRes.success) {
+      setError(tokenRes.error || 'Insufficient tokens.')
+      setIsProcessing(false); stopProcessingMessages()
+      return
+    }
+    if (tokenRes.remainingBalance !== undefined) {
+      setTokens(tokenRes.remainingBalance)
+    }
+
     try {
       const formData = new FormData()
       formData.append('file', file)
@@ -205,6 +239,22 @@ export default function AutoSubtitlePage() {
           </p>
         </div>
 
+        {/* Tokens Alert */}
+        {(tokens === 0 || tokens === null) && (
+          <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', padding: '16px 24px', borderRadius: '16px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#f59e0b' }}>
+              <Zap size={24} fill="#f59e0b" strokeWidth={1} />
+              <div>
+                <span style={{ fontWeight: 700, display: 'block', fontSize: '16px' }}>{tokens === null ? 'You need tokens to continue!' : 'You are out of tokens!'}</span>
+                <span style={{ fontSize: '13px', opacity: 0.8 }}>Please buy tokens to start generating subtitles.</span>
+              </div>
+            </div>
+            <a href="/#pricing" className="btn-banger" style={{ padding: '10px 20px', fontSize: '14px', whiteSpace: 'nowrap' }}>
+              Buy Tokens
+            </a>
+          </div>
+        )}
+
         {/* Error */}
         <AnimatePresence>
           {error && (
@@ -243,7 +293,13 @@ export default function AutoSubtitlePage() {
                         <FileAudio size={30} color="#a855f7" />
                       </div>
                       <p style={{ color: '#fff', fontWeight: 600, fontSize: '16px', marginBottom: '4px' }}>{file.name}</p>
-                      <p style={{ color: 'var(--muted)', fontSize: '13px' }}>{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                      <p style={{ color: 'var(--muted)', fontSize: '13px', marginBottom: '16px' }}>{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                      {audioDuration > 0 && (
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(245, 158, 11, 0.1)', padding: '6px 12px', borderRadius: '100px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
+                           <Zap size={14} fill="#f59e0b" color="#f59e0b" />
+                           <span style={{ color: '#f59e0b', fontSize: '13px', fontWeight: 600 }}>Cost: {Math.ceil(audioDuration * (2000 / 3600))} Tokens</span>
+                        </div>
+                      )}
                     </motion.div>
                   ) : (
                     <motion.div key="prompt" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -251,14 +307,14 @@ export default function AutoSubtitlePage() {
                         <UploadCloud size={32} color="var(--muted)" strokeWidth={1.5} />
                       </div>
                       <h3 style={{ fontSize: '20px', fontWeight: 600, color: '#fff', marginBottom: '8px' }}>Drag & drop audio or video</h3>
-                      <p style={{ color: 'var(--muted)', fontSize: '14px' }}>MP3, WAV, MP4, MOV, MKV... up to 200MB</p>
+                      <p style={{ color: 'var(--muted)', fontSize: '14px' }}>MP3, WAV, MP4, MOV, MKV... up to 25MB</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
 
               {/* Generate Button */}
-              <button onClick={handleGenerate} disabled={!file || isProcessing} style={{ width: '100%', padding: '18px', borderRadius: '14px', border: 'none', background: !file || isProcessing ? 'rgba(255,255,255,0.05)' : 'linear-gradient(135deg, #a855f7, #7c3aed)', color: !file || isProcessing ? 'var(--muted)' : '#fff', fontSize: '16px', fontWeight: 700, cursor: !file || isProcessing ? 'not-allowed' : 'pointer', transition: 'all 0.3s ease', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', boxShadow: !file || isProcessing ? 'none' : '0 8px 32px rgba(168,85,247,0.3)' }}>
+              <button onClick={handleGenerate} disabled={!file || isProcessing || tokens === 0 || tokens === null} style={{ width: '100%', padding: '18px', borderRadius: '14px', border: 'none', background: !file || isProcessing || tokens === 0 || tokens === null ? 'rgba(255,255,255,0.05)' : 'linear-gradient(135deg, #a855f7, #7c3aed)', color: !file || isProcessing || tokens === 0 || tokens === null ? 'var(--muted)' : '#fff', fontSize: '16px', fontWeight: 700, cursor: !file || isProcessing || tokens === 0 || tokens === null ? 'not-allowed' : 'pointer', transition: 'all 0.3s ease', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', boxShadow: !file || isProcessing || tokens === 0 || tokens === null ? 'none' : '0 8px 32px rgba(168,85,247,0.3)' }}>
                 {isProcessing ? (<><Loader2 size={20} style={{ animation: 'spin 1s linear infinite' }} />{processingMsg}</>) : (<><Captions size={20} />Generate Subtitles</>)}
               </button>
             </motion.div>
@@ -307,7 +363,7 @@ export default function AutoSubtitlePage() {
                 <p style={{ color: 'var(--muted)', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '12px' }}>
                   Subtitle Preview — <span style={{ color: activeIdx >= 0 ? '#a855f7' : 'var(--muted)' }}>{activeIdx >= 0 ? `Block ${subtitles[activeIdx].index} active` : 'Play audio to sync'}</span>
                 </p>
-                <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '16px', padding: '16px', maxHeight: '420px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div ref={listRef} style={{ position: 'relative', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '16px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {subtitles.map((sub, i) => {
                     const isActive = i === activeIdx
                     return (

@@ -1,10 +1,10 @@
 'use client'
 
-import { Command } from 'lucide-react'
+import { Captions } from 'lucide-react'
 
 const footerLinks = {
-  Product: ['Overview', 'Tools', 'Pricing', 'Changelog', 'Roadmap'],
-  Platform: ['Video to Script', 'AI Code Editor', 'UI Generation', 'Automations', 'API Reference'],
+  Product: ['Overview', 'Features', 'Pricing', 'Changelog', 'Roadmap'],
+  Tool: ['Auto Subtitles', 'Darija Support', 'Export Formats', 'API Reference', 'Integrations'],
   Company: ['About', 'Blog', 'Careers', 'Brand Assets', 'Contact'],
   Legal: ['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'Security'],
 }
@@ -34,7 +34,7 @@ export default function Footer() {
           {/* Brand */}
           <div style={{ paddingRight: '40px' }}>
             <a
-              href="#"
+              href="/"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -51,23 +51,23 @@ export default function Footer() {
                 style={{
                   width: '32px',
                   height: '32px',
-                  background: 'linear-gradient(135deg, #7b61ff, #00e5ff)',
+                  background: 'linear-gradient(135deg, #a855f7, #7b61ff)',
                   borderRadius: '10px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <Command size={16} color="white" strokeWidth={2.5} />
+                <Captions size={16} color="white" strokeWidth={2.5} />
               </div>
               lengoAi
             </a>
             <p style={{ fontSize: '15px', color: 'var(--muted)', lineHeight: 1.6 }}>
-              The unified intelligence layer for your creative workflow.
+              AI-powered subtitles for Darija, French, English and 90+ languages. Generate, style and export captions in under a minute.
             </p>
           </div>
 
-          {/* Link Columns */}
+          {/* Link columns */}
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
               <h4
@@ -123,9 +123,17 @@ export default function Footer() {
             <span>All systems operational.</span>
           </div>
           <div style={{ display: 'flex', gap: '16px' }}>
-            <a href="#" style={{ color: 'inherit', textDecoration: 'none' }} onMouseEnter={(e) => ((e.target as HTMLElement).style.color = '#fff')} onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'var(--muted)')}>Twitter</a>
-            <a href="#" style={{ color: 'inherit', textDecoration: 'none' }} onMouseEnter={(e) => ((e.target as HTMLElement).style.color = '#fff')} onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'var(--muted)')}>GitHub</a>
-            <a href="#" style={{ color: 'inherit', textDecoration: 'none' }} onMouseEnter={(e) => ((e.target as HTMLElement).style.color = '#fff')} onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'var(--muted)')}>Discord</a>
+            {['Twitter', 'GitHub', 'Discord', 'YouTube'].map((s) => (
+              <a
+                key={s}
+                href="#"
+                style={{ color: 'inherit', textDecoration: 'none' }}
+                onMouseEnter={(e) => ((e.target as HTMLElement).style.color = '#fff')}
+                onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'var(--muted)')}
+              >
+                {s}
+              </a>
+            ))}
           </div>
         </div>
       </div>

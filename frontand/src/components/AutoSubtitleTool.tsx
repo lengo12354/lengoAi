@@ -75,6 +75,7 @@ export default function AutoSubtitlePage() {
   const processingInterval = useRef<ReturnType<typeof setInterval> | null>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
   const activeSubRef = useRef<HTMLDivElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
 
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
@@ -92,7 +93,16 @@ export default function AutoSubtitlePage() {
   // Auto-scroll to active subtitle
   useEffect(() => {
     if (activeSubRef.current) {
-      activeSubRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+      const rect = activeSubRef.current.getBoundingClientRect()
+      const windowHeight = window.innerHeight
+      
+      // Only scroll down if the element is going off the bottom of the screen
+      if (rect.bottom > windowHeight - 50) {
+        window.scrollBy({
+          top: rect.bottom - windowHeight + 150, // Scroll just enough to show it clearly
+          behavior: 'smooth'
+        })
+      }
     }
   }, [activeIdx])
 
@@ -307,7 +317,7 @@ export default function AutoSubtitlePage() {
                 <p style={{ color: 'var(--muted)', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '12px' }}>
                   Subtitle Preview — <span style={{ color: activeIdx >= 0 ? '#a855f7' : 'var(--muted)' }}>{activeIdx >= 0 ? `Block ${subtitles[activeIdx].index} active` : 'Play audio to sync'}</span>
                 </p>
-                <div style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '16px', padding: '16px', maxHeight: '420px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div ref={listRef} style={{ position: 'relative', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '16px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {subtitles.map((sub, i) => {
                     const isActive = i === activeIdx
                     return (

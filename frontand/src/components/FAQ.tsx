@@ -6,34 +6,44 @@ import { ChevronDown } from 'lucide-react'
 
 const faqs = [
   {
-    question: "What's included in the free plan?",
+    question: 'What languages does lengoAi support?',
     answer:
-      'The free plan includes 5 exports per month, access to the Video → Script and Smart Summarizer tools, and community support. No credit card required to sign up.',
+      'lengoAi supports 90+ languages including Moroccan Darija (Arabic script and Franco/Latin), English, French, Spanish, Arabic, and many more. Language is detected automatically — you don\'t need to select it manually.',
   },
   {
-    question: 'What export formats are supported?',
+    question: 'What video and audio formats can I upload?',
     answer:
-      'We support SRT, VTT, plain text, CapCut JSON, Premiere Pro XML, and direct copy-paste for all script exports. For design exports, we generate clean HTML/CSS and Tailwind code. Code editor outputs are compatible with all major languages.',
+      'We accept MP3, WAV, AAC, OGG, FLAC, MP4, MOV, MKV, AVI, and WebM. Files up to 25 MB are supported.',
   },
   {
-    question: 'Which video editors does lengoAi integrate with?',
+    question: 'What export formats are available?',
     answer:
-      'lengoAi integrates natively with CapCut, Adobe Premiere Pro, DaVinci Resolve, and Final Cut Pro. You can also export universally compatible SRT files for any other editor.',
+      'You can export as SRT, VTT, plain text, CapCut JSON, Premiere Pro XML, DaVinci Resolve SRT, and Final Cut Pro FCPXML. All exports include word-level timestamps on Pro.',
   },
   {
-    question: 'Can I use lengoAi with my whole team?',
+    question: 'How accurate is the Darija transcription?',
     answer:
-      'Yes! The Pro plan supports up to 3 users with shared workspaces and real-time collaboration. The Team plan supports up to 10 users and adds API access, custom branding, and SSO support.',
+      'Our Darija model is fine-tuned specifically on Moroccan dialect audio — both Franco (Latin script) and Arabic script. In our benchmarks, we achieve over 93% word accuracy on clear Darija speech, far outperforming general-purpose models.',
   },
   {
-    question: 'How does lengoAi handle my data and privacy?',
+    question: 'How long does processing take?',
     answer:
-      'All uploaded files are processed in isolated, encrypted environments and deleted within 24 hours of processing. We are SOC 2 Type II compliant and never use your content to train our models. Your data is always yours.',
+      'Most files are ready in under 60 seconds. A 1-hour recording typically takes 2–4 minutes to process. Pro users are placed in a priority queue for even faster results.',
   },
   {
-    question: 'Can I cancel at any time?',
+    question: 'Can I edit the subtitles after they are generated?',
     answer:
-      "Absolutely. There are no lock-in contracts. You can cancel your subscription at any time from your account settings, and you'll retain access until the end of your billing period.",
+      'Yes. You can review, edit, and fine-tune the generated subtitles directly in the browser before exporting. Changes are saved automatically.',
+  },
+  {
+    question: 'Is my data private and secure?',
+    answer:
+      'All uploaded files are processed in isolated encrypted environments and permanently deleted within 24 hours. We are GDPR-compliant and never use your content to train our models.',
+  },
+  {
+    question: 'Can I cancel my subscription at any time?',
+    answer:
+      'Absolutely — no contracts or lock-ins. Cancel from your account settings at any time and keep access until the end of your billing period.',
   },
 ]
 
@@ -46,9 +56,7 @@ function FAQItem({ faq, index }: { faq: typeof faqs[0]; index: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: index * 0.06 }}
-      style={{
-        borderBottom: '1px solid var(--border)',
-      }}
+      style={{ borderBottom: '1px solid var(--border)' }}
     >
       <button
         id={`faq-${index}`}
@@ -115,16 +123,21 @@ export default function FAQ() {
           transition={{ duration: 0.5 }}
           style={{ textAlign: 'center', marginBottom: '64px' }}
         >
+          <span className="section-badge">FAQ</span>
           <h2
             style={{
               fontSize: 'clamp(32px, 4vw, 52px)',
               fontWeight: 700,
               letterSpacing: '-1px',
               lineHeight: 1.15,
+              marginTop: '20px',
             }}
           >
             Frequently asked questions
           </h2>
+          <p style={{ fontSize: '18px', color: 'var(--muted)', maxWidth: '520px', margin: '20px auto 0', lineHeight: 1.6 }}>
+            Everything you need to know about lengoAi Auto Subtitles.
+          </p>
         </motion.div>
 
         <div style={{ maxWidth: '760px', margin: '0 auto' }}>

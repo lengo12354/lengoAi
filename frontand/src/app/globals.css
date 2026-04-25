@@ -9,7 +9,7 @@
     /* Cards will be rich dark translucent */
     --card-bg: rgba(14, 14, 20, 0.4);
     --card-border: rgba(255, 255, 255, 0.04);
-    
+
     /* Banger Accents */
     --accent-primary: #7b61ff;
     --accent-secondary: #00e5ff;
@@ -64,7 +64,12 @@
     overflow-x: hidden;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-heading), sans-serif;
   }
 
@@ -76,13 +81,16 @@
   ::-webkit-scrollbar {
     width: 8px;
   }
+
   ::-webkit-scrollbar-track {
     background: var(--background);
   }
+
   ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 4px;
   }
+
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.2);
   }
@@ -108,7 +116,7 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   .gradient-text-accent {
     background: linear-gradient(135deg, #7b61ff 0%, #00e5ff 100%);
     -webkit-background-clip: text;
@@ -126,7 +134,7 @@
     position: relative;
     overflow: hidden;
   }
-  
+
   /* Buttons */
   .btn-banger {
     position: relative;
@@ -164,7 +172,7 @@
   .btn-banger:hover::before {
     opacity: 1;
   }
-  
+
   .btn-banger:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 40px -10px rgba(123, 97, 255, 0.5);
@@ -187,6 +195,7 @@
     text-decoration: none;
     transition: all 0.2s ease;
   }
+
   .btn-ghost-banger:hover {
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.2);
@@ -216,13 +225,27 @@
 }
 
 @keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 @keyframes pulse-slow {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.05); }
+
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
 }
 
 /* Global noise overlay */
@@ -246,11 +269,9 @@
   bottom: 0;
   border-radius: inherit;
   padding: 1px;
-  background: radial-gradient(
-    800px circle at var(--mouse-x) var(--mouse-y),
-    rgba(123, 97, 255, 0.4),
-    transparent 40%
-  );
+  background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y),
+      rgba(123, 97, 255, 0.4),
+      transparent 40%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -268,6 +289,7 @@
     padding-top: 80px;
     padding-bottom: 80px;
   }
+
   .container-xl {
     padding-inline: 20px;
   }

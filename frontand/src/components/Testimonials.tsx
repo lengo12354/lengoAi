@@ -4,31 +4,31 @@ import { motion } from 'framer-motion'
 
 const testimonials = [
   {
-    quote: "lengoAi completely changed how I produce content. What used to take me 3 hours of transcription now happens in 30 seconds. The script quality is remarkable.",
-    name: "Sarah Chen",
+    quote: "lengoAi is the only tool that actually handles Darija properly. I stopped manually writing subtitles for my content — it saves me hours every single week.",
+    name: "Yassine El Amrani",
     role: "Content Creator",
-    company: "SarahMakes",
+    company: "YouTube Morocco",
+    avatarColor: "linear-gradient(135deg, #a855f7, #7b61ff)"
+  },
+  {
+    quote: "The CapCut export is seamless. I upload my video, get subtitles in 30 seconds, import to CapCut and I'm done. Absolute game changer for my workflow.",
+    name: "Fatima Zahra",
+    role: "Short-form Video Editor",
+    company: "TikTok Creator",
     avatarColor: "linear-gradient(135deg, #FF6B6B, #FF8E53)"
   },
   {
-    quote: "The AI code editor is genuinely impressive. It understands context across files and suggests refactors that I wouldn't have caught for hours. It's like pair programming with a senior dev.",
-    name: "Marcus Williams",
-    role: "Senior Engineer",
-    company: "Vercel",
+    quote: "We subtitle 50+ podcast episodes a month. lengoAi cut our post-production time by 80%. The French and Darija accuracy is genuinely impressive.",
+    name: "Mehdi Benali",
+    role: "Podcast Producer",
+    company: "Sawt Studio",
     avatarColor: "linear-gradient(135deg, #00d4aa, #0088ff)"
   },
   {
-    quote: "We've replaced four different tools with lengoAi. The team collaboration features are seamless, and the workflow automator saves us about 6 hours a week across the whole team.",
-    name: "Priya Kapoor",
-    role: "Head of Product",
-    company: "Linear",
-    avatarColor: "linear-gradient(135deg, #7b61ff, #ff007b)"
-  },
-  {
-    quote: "I can literally describe an interface concept in natural language and have production-ready React components deployed in minutes. Unbelievable.",
-    name: "Evan Davis",
-    role: "Frontend Tech Lead",
-    company: "Figma",
+    quote: "The Premiere Pro XML export is perfect. Subtitles drop right onto the timeline with correct timing. I haven't touched a subtitle manually in months.",
+    name: "Salma Ouhssain",
+    role: "Video Editor",
+    company: "Freelance",
     avatarColor: "linear-gradient(135deg, #333, #666)"
   },
 ]
@@ -38,21 +38,25 @@ export default function Testimonials() {
     <section id="testimonials" className="section-padding">
       <div className="container-xl">
         <motion.div
-           initial={{ opacity: 0, y: 20 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           viewport={{ once: true }}
-           transition={{ duration: 0.6 }}
-           style={{ textAlign: 'center', marginBottom: '80px' }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          style={{ textAlign: 'center', marginBottom: '80px' }}
         >
+          <span className="section-badge" style={{ background: 'rgba(168,85,247,0.08)', color: '#c084fc', border: '1px solid rgba(168,85,247,0.2)' }}>
+            Testimonials
+          </span>
           <h2
             style={{
               fontSize: 'clamp(36px, 5vw, 56px)',
               fontWeight: 700,
               letterSpacing: '-1.5px',
               lineHeight: 1.1,
+              marginTop: '20px',
             }}
           >
-            Don't just take our word for it.
+            Creators love lengoAi.
           </h2>
         </motion.div>
 
@@ -79,7 +83,7 @@ export default function Testimonials() {
                 background: 'rgba(255,255,255,0.02)',
               }}
             >
-              <div style={{ color: '#7b61ff', fontSize: '48px', lineHeight: 0.8, fontFamily: 'serif', opacity: 0.5 }}>"</div>
+              <div style={{ color: '#a855f7', fontSize: '48px', lineHeight: 0.8, fontFamily: 'serif', opacity: 0.5 }}>"</div>
               <p
                 style={{
                   fontSize: '18px',
@@ -99,13 +103,14 @@ export default function Testimonials() {
                     height: '48px',
                     borderRadius: '50%',
                     background: t.avatarColor,
-                    boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.2)'
+                    boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.2)',
+                    flexShrink: 0,
                   }}
                 />
                 <div>
                   <div style={{ fontWeight: 600, fontSize: '16px', fontFamily: 'var(--font-heading)' }}>{t.name}</div>
                   <div style={{ fontSize: '14px', color: 'var(--muted)' }}>
-                    {t.role} at {t.company}
+                    {t.role} · {t.company}
                   </div>
                 </div>
               </div>
