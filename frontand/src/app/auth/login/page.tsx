@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { motion } from 'framer-motion'
-import { Captions, Mail, Github, Loader2 } from 'lucide-react'
+import { Captions, Mail, Loader2 } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
