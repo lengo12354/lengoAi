@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Captions, Video } from 'lucide-react'
+import { Captions, Video, MonitorPlay } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -19,6 +19,13 @@ const features = [
     description: 'Paste your video title and get 3 AI-powered CTR-optimized alternatives designed to boost views and click-through rates.',
     color: '#ff4444',
     href: '/tools/title-optimizer',
+  },
+  {
+    icon: MonitorPlay,
+    title: 'YouTube Thumbnail Preview',
+    description: 'Mockup your YouTube thumbnails in a realistic layout before uploading. See exactly how they look to your viewers.',
+    color: '#FC3F1E',
+    href: '/tools/thumbnail-preview',
   },
 ]
 
