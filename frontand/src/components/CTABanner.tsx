@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { motion } from 'framer-motion'
 import { Rocket } from 'lucide-react'
@@ -55,15 +55,16 @@ export default function CTABanner() {
 
           <h2
             style={{
+              fontFamily: 'var(--font-coolvetica)',
               fontSize: 'clamp(48px, 8vw, 96px)',
-              fontWeight: 800,
+              fontWeight: 400,
               letterSpacing: '-2px',
               lineHeight: 1.0,
               marginBottom: '24px',
-              fontFamily: 'var(--font-heading)'
             }}
           >
-            Your best content.<br />Ready in minutes.
+            Your best content.<br />
+            <span style={{ fontFamily: 'var(--font-coolvetica-it)' }}>Ready in minutes.</span>
           </h2>
           <p
             style={{

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, Outfit } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
 import ThemeProvider from '@/components/ThemeProvider'
 import SmoothScroller from '@/components/SmoothScroller'
@@ -13,6 +14,18 @@ const inter = Inter({
 const outfit = Outfit({
   subsets: ['latin'],
   variable: '--font-outfit',
+  display: 'swap',
+})
+
+const coolvetica = localFont({
+  src: './fonts/coolvetica-rg.otf',
+  variable: '--font-coolvetica',
+  display: 'swap',
+})
+
+const coolveticaIt = localFont({
+  src: './fonts/coolvetica-rg-it.otf',
+  variable: '--font-coolvetica-it',
   display: 'swap',
 })
 
@@ -35,7 +48,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${outfit.variable}`}>
+      <body className={`${inter.variable} ${outfit.variable} ${coolvetica.variable} ${coolveticaIt.variable}`}>
         <div className="noise-bg" />
         <SmoothScroller>
           <ThemeProvider>{children}</ThemeProvider>

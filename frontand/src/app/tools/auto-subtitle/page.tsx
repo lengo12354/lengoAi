@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -227,8 +227,8 @@ export default function AutoSubtitlePage() {
 
   return (
     <main style={{ minHeight: '100vh', paddingTop: '100px', paddingBottom: '100px', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'fixed', top: '20%', left: '50%', transform: 'translate(-50%, -50%)', width: '80vw', height: '500px', background: 'radial-gradient(ellipse, rgba(138,43,226,0.2) 0%, transparent 60%)', filter: 'blur(80px)', zIndex: 0, pointerEvents: 'none' }} />
-      <div style={{ position: 'fixed', top: '70%', left: '30%', width: '40vw', height: '300px', background: 'radial-gradient(ellipse, rgba(0,229,255,0.08) 0%, transparent 60%)', filter: 'blur(60px)', zIndex: 0, pointerEvents: 'none' }} />
+      <div style={{ position: 'fixed', top: '20%', left: '50%', transform: 'translate(-50%, -50%)', width: '80vw', height: '500px', background: 'radial-gradient(ellipse, rgba(63,89,231,0.15) 0%, transparent 60%)', filter: 'blur(80px)', zIndex: 0, pointerEvents: 'none' }} />
+      <div style={{ position: 'fixed', top: '70%', left: '30%', width: '40vw', height: '300px', background: 'radial-gradient(ellipse, rgba(27,56,220,0.08) 0%, transparent 60%)', filter: 'blur(60px)', zIndex: 0, pointerEvents: 'none' }} />
 
       <div className="container-xl" style={{ maxWidth: '900px', position: 'relative', zIndex: 1 }}>
 
@@ -238,7 +238,7 @@ export default function AutoSubtitlePage() {
             <ArrowLeft size={16} /> Back to Tools
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-            <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'linear-gradient(135deg, rgba(138,43,226,0.4), rgba(0,229,255,0.2))', border: '1px solid rgba(138,43,226,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'linear-gradient(135deg, rgba(63,89,231,0.4), rgba(27,56,220,0.2))', border: '1px solid rgba(63,89,231,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Captions size={28} color="#3F59E7" />
             </div>
             <h1 style={{ fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: 800, letterSpacing: '-1px', background: 'linear-gradient(135deg, #fff, #a1a1aa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>

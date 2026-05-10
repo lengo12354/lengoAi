@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { useRef } from 'react'
@@ -46,8 +46,9 @@ export default function HowItWorks() {
           <span className="section-badge">How It Works</span>
           <h2
             style={{
+              fontFamily: 'var(--font-coolvetica)',
               fontSize: 'clamp(36px, 5vw, 56px)',
-              fontWeight: 700,
+              fontWeight: 400,
               letterSpacing: '-1.5px',
               lineHeight: 1.1,
             }}

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { motion } from 'framer-motion'
 
@@ -49,8 +49,9 @@ export default function Testimonials() {
           </span>
           <h2
             style={{
+              fontFamily: 'var(--font-coolvetica)',
               fontSize: 'clamp(36px, 5vw, 56px)',
-              fontWeight: 700,
+              fontWeight: 400,
               letterSpacing: '-1.5px',
               lineHeight: 1.1,
               marginTop: '20px',

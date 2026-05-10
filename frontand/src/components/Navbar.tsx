@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -71,8 +71,8 @@ export default function Navbar() {
     <>
       <nav
         style={{
-          position: 'fixed',
-          top: scrolled ? '16px' : '24px',
+          position: 'absolute',
+          top: '24px',
           left: 0,
           right: 0,
           zIndex: 100,
@@ -80,24 +80,22 @@ export default function Navbar() {
           justifyContent: 'center',
           pointerEvents: 'none',
           padding: '0 20px',
-          transition: 'all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)',
         }}
         className="nav-container"
       >
         <div
           style={{
             width: '100%',
-            maxWidth: scrolled ? '840px' : '1200px',
-            borderRadius: scrolled ? '100px' : '24px',
-            border: scrolled ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0.05)',
-            background: scrolled ? 'rgba(10, 10, 15, 0.75)' : 'rgba(255, 255, 255, 0.02)',
+            maxWidth: '1200px',
+            borderRadius: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.05)',
+            background: 'rgba(255, 255, 255, 0.02)',
             backdropFilter: 'blur(20px) saturate(180%)',
             pointerEvents: 'auto',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '12px 24px',
-            transition: 'all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)',
           }}
           className="nav-pill"
         >
@@ -116,21 +114,11 @@ export default function Navbar() {
               letterSpacing: '-0.5px',
             }}
           >
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                background: 'linear-gradient(135deg, #3F59E7, #1B38DC)',
-                borderRadius: '10px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 0 20px rgba(63, 89, 231, 0.4)',
-              }}
-            >
-              <Captions size={16} color="white" strokeWidth={2.5} />
-            </div>
-            lengoAi
+            <img
+              src="/lengoailogo.png"
+              alt="lengoAi Logo"
+              style={{ height: '44px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }}
+            />
           </a>
 
           {/* Desktop Nav Links */}
@@ -199,6 +187,9 @@ export default function Navbar() {
                   <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #3F59E7, #162DB2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 600, fontSize: '14px' }}>
                     {user.email?.charAt(0).toUpperCase()}
                   </div>
+                  <span style={{ color: '#fff', fontSize: '14px', fontWeight: 500, paddingRight: '4px' }}>
+                    {user.email?.split('@')[0] || 'Account'}
+                  </span>
                   <ChevronDown size={14} color="var(--muted)" style={{ transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
                 </button>
 
@@ -367,13 +358,13 @@ export default function Navbar() {
             </a>
           ))}
           {user ? (
-            <button 
+            <button
               onClick={async () => {
                 const supabase = createClient()
                 await supabase.auth.signOut()
                 setMenuOpen(false)
               }}
-              className="btn-ghost-banger" 
+              className="btn-ghost-banger"
               style={{ width: '100%', marginTop: '12px', display: 'flex', justifyContent: 'center', gap: '8px' }}
             >
               <LogOut size={16} />

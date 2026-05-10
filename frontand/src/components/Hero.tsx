@@ -56,8 +56,9 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           style={{
+            fontFamily: 'var(--font-coolvetica)',
             fontSize: 'clamp(52px, 8vw, 108px)',
-            fontWeight: 800,
+            fontWeight: 400,
             lineHeight: 0.95,
             letterSpacing: '-0.04em',
             marginBottom: '32px',
@@ -65,7 +66,7 @@ export default function Hero() {
           }}
         >
           Focus on creating.<br />
-          <span className="gradient-text-accent">Let AI do the rest.</span>
+          <span className="gradient-text-accent">Let AI <span style={{ fontFamily: 'var(--font-coolvetica-it)', fontSize: '1.15em', fontWeight: 400, letterSpacing: '0' }}>do the rest.</span></span>
         </motion.h1>
 
         {/* Subhead */}

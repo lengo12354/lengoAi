@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { Rocket } from 'lucide-react'
 
@@ -47,20 +47,11 @@ export default function Footer() {
                 marginBottom: '20px',
               }}
             >
-              <div
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  background: 'linear-gradient(135deg, #3F59E7, #1B38DC)',
-                  borderRadius: '10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Rocket size={16} color="white" strokeWidth={2.5} />
-              </div>
-              lengoAi
+              <img
+                src="/lengoailogo.png"
+                alt="lengoAi Logo"
+                style={{ height: '44px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }}
+              />
             </a>
             <p style={{ fontSize: '15px', color: 'var(--muted)', lineHeight: 1.6 }}>
               The ultimate AI toolkit for creators. Generate thumbnails, auto-subtitle videos in 90+ languages, and optimize your content for maximum reach.

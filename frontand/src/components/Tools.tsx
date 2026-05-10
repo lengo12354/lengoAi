@@ -48,8 +48,9 @@ export default function Tools() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
             style={{
+              fontFamily: 'var(--font-coolvetica)',
               fontSize: 'clamp(40px, 6vw, 64px)',
-              fontWeight: 800,
+              fontWeight: 400,
               letterSpacing: '-2px',
               lineHeight: 1.05,
               marginTop: '24px',

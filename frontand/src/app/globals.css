@@ -166,8 +166,8 @@
     background: linear-gradient(135deg, #3F59E7, #1B38DC);
     background-size: 200% auto;
     border: 1px solid rgba(107, 125, 237, 0.4);
-    box-shadow: 
-      0 4px 20px rgba(27, 56, 220, 0.4), 
+    box-shadow:
+      0 4px 20px rgba(27, 56, 220, 0.4),
       inset 0 1px 1px rgba(255, 255, 255, 0.15);
     text-shadow: none;
     z-index: 1;
@@ -191,8 +191,8 @@
 
   .btn-banger:hover {
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 
-      0 12px 40px rgba(27, 56, 220, 0.6), 
+    box-shadow:
+      0 12px 40px rgba(27, 56, 220, 0.6),
       inset 0 1px 1px rgba(255, 255, 255, 0.2);
     border-color: rgba(148, 162, 242, 0.5);
   }

@@ -121,8 +121,9 @@ export default function FAQ() {
           <span className="section-badge">FAQ</span>
           <h2
             style={{
+              fontFamily: 'var(--font-coolvetica)',
               fontSize: 'clamp(32px, 4vw, 52px)',
-              fontWeight: 700,
+              fontWeight: 400,
               letterSpacing: '-1px',
               lineHeight: 1.15,
               marginTop: '20px',
