@@ -1,34 +1,34 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 
 const testimonials = [
   {
-    quote: "lengoAi is the only tool that actually handles Darija properly. I stopped manually writing subtitles for my content — it saves me hours every single week.",
+    quote: "The Thumbnail Preview tool is a lifesaver. Being able to see exactly how my design looks in the YouTube UI before uploading has completely changed my workflow.",
     name: "Yassine El Amrani",
-    role: "Content Creator",
-    company: "YouTube Morocco",
-    avatarColor: "linear-gradient(135deg, #a855f7, #7b61ff)"
+    role: "Graphic Designer",
+    company: "Freelance",
+    avatarColor: "linear-gradient(135deg, #3F59E7, #1B38DC)"
   },
   {
-    quote: "The CapCut export is seamless. I upload my video, get subtitles in 30 seconds, import to CapCut and I'm done. Absolute game changer for my workflow.",
+    quote: "lengoAi is the only suite that actually handles Darija properly for subtitles. I stopped manually writing them for my content. It saves me hours every week.",
     name: "Fatima Zahra",
-    role: "Short-form Video Editor",
-    company: "TikTok Creator",
+    role: "Content Creator",
+    company: "TikTok Morocco",
     avatarColor: "linear-gradient(135deg, #FF6B6B, #FF8E53)"
   },
   {
-    quote: "We subtitle 50+ podcast episodes a month. lengoAi cut our post-production time by 80%. The French and Darija accuracy is genuinely impressive.",
+    quote: "The YouTube Title Optimizer helped us increase our average click-through rate by 30%. It consistently generates titles that grab attention without being clickbait.",
     name: "Mehdi Benali",
-    role: "Podcast Producer",
+    role: "YouTube Strategist",
     company: "Sawt Studio",
     avatarColor: "linear-gradient(135deg, #00d4aa, #0088ff)"
   },
   {
-    quote: "The Premiere Pro XML export is perfect. Subtitles drop right onto the timeline with correct timing. I haven't touched a subtitle manually in months.",
+    quote: "Having all these tools in one place is incredible. From perfectly timed subtitle exports for Premiere Pro to testing thumbnail variations, it's my daily driver.",
     name: "Salma Ouhssain",
     role: "Video Editor",
-    company: "Freelance",
+    company: "Creator Agency",
     avatarColor: "linear-gradient(135deg, #333, #666)"
   },
 ]
@@ -44,7 +44,7 @@ export default function Testimonials() {
           transition={{ duration: 0.6 }}
           style={{ textAlign: 'center', marginBottom: '80px' }}
         >
-          <span className="section-badge" style={{ background: 'rgba(168,85,247,0.08)', color: '#c084fc', border: '1px solid rgba(168,85,247,0.2)' }}>
+          <span className="section-badge" style={{ background: 'rgba(63,89,231,0.08)', color: '#6A7DED', border: '1px solid rgba(63,89,231,0.2)' }}>
             Testimonials
           </span>
           <h2
@@ -83,7 +83,7 @@ export default function Testimonials() {
                 background: 'rgba(255,255,255,0.02)',
               }}
             >
-              <div style={{ color: '#a855f7', fontSize: '48px', lineHeight: 0.8, fontFamily: 'serif', opacity: 0.5 }}>"</div>
+              <div style={{ color: '#3F59E7', fontSize: '48px', lineHeight: 0.8, fontFamily: 'serif', opacity: 0.5 }}>"</div>
               <p
                 style={{
                   fontSize: '18px',

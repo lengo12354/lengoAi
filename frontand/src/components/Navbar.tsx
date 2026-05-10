@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -120,12 +120,12 @@ export default function Navbar() {
               style={{
                 width: '32px',
                 height: '32px',
-                background: 'linear-gradient(135deg, #a855f7, #7b61ff)',
+                background: 'linear-gradient(135deg, #3F59E7, #1B38DC)',
                 borderRadius: '10px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 0 20px rgba(168, 85, 247, 0.4)',
+                boxShadow: '0 0 20px rgba(63, 89, 231, 0.4)',
               }}
             >
               <Captions size={16} color="white" strokeWidth={2.5} />
@@ -196,7 +196,7 @@ export default function Navbar() {
                   onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
                   onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
                 >
-                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #a855f7, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 600, fontSize: '14px' }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, #3F59E7, #162DB2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 600, fontSize: '14px' }}>
                     {user.email?.charAt(0).toUpperCase()}
                   </div>
                   <ChevronDown size={14} color="var(--muted)" style={{ transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />

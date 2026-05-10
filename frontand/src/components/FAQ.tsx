@@ -6,34 +6,29 @@ import { ChevronDown } from 'lucide-react'
 
 const faqs = [
   {
-    question: 'What languages does lengoAi support?',
+    question: 'Who is lengoAi built for?',
     answer:
-      'lengoAi supports 90+ languages including Moroccan Darija (Arabic script and Franco/Latin), English, French, Spanish, Arabic, and many more. Language is detected automatically — you don\'t need to select it manually.',
+      'lengoAi is designed for Graphic Designers, YouTubers, Video Editors, and Content Creators who want to streamline their workflow, optimize their content, and save hours of manual work.',
   },
   {
-    question: 'What video and audio formats can I upload?',
+    question: 'Can I use the tools for free?',
     answer:
-      'We accept MP3, WAV, AAC, OGG, FLAC, MP4, MOV, MKV, AVI, and WebM. Files up to 25 MB are supported.',
+      'Yes! We offer a free Starter plan that gives you limited access to all our tools, including thumbnail mockups and auto-subtitles, so you can test the quality before upgrading.',
   },
   {
-    question: 'What export formats are available?',
+    question: 'What languages are supported for Auto-Subtitles?',
+    answer:
+      'We support 90+ languages including Moroccan Darija (Arabic script and Franco/Latin), English, French, Spanish, Arabic, and many more. Language is detected automatically.',
+  },
+  {
+    question: 'What platforms is the Thumbnail Preview tool designed for?',
+    answer:
+      'Currently, it perfectly simulates the YouTube interface (both desktop and mobile formats) so you can ensure your thumbnails are high-converting before you hit publish.',
+  },
+  {
+    question: 'What export formats are available for subtitles?',
     answer:
       'You can export as SRT, VTT, plain text, CapCut JSON, Premiere Pro XML, DaVinci Resolve SRT, and Final Cut Pro FCPXML. All exports include word-level timestamps on Pro.',
-  },
-  {
-    question: 'How accurate is the Darija transcription?',
-    answer:
-      'Our Darija model is fine-tuned specifically on Moroccan dialect audio — both Franco (Latin script) and Arabic script. In our benchmarks, we achieve over 93% word accuracy on clear Darija speech, far outperforming general-purpose models.',
-  },
-  {
-    question: 'How long does processing take?',
-    answer:
-      'Most files are ready in under 60 seconds. A 1-hour recording typically takes 2–4 minutes to process. Pro users are placed in a priority queue for even faster results.',
-  },
-  {
-    question: 'Can I edit the subtitles after they are generated?',
-    answer:
-      'Yes. You can review, edit, and fine-tune the generated subtitles directly in the browser before exporting. Changes are saved automatically.',
   },
   {
     question: 'Is my data private and secure?',
@@ -43,7 +38,7 @@ const faqs = [
   {
     question: 'Can I cancel my subscription at any time?',
     answer:
-      'Absolutely — no contracts or lock-ins. Cancel from your account settings at any time and keep access until the end of your billing period.',
+      'Absolutely no contracts or lock-ins. Cancel from your account settings at any time and keep access until the end of your billing period.',
   },
 ]
 
@@ -136,7 +131,7 @@ export default function FAQ() {
             Frequently asked questions
           </h2>
           <p style={{ fontSize: '18px', color: 'var(--muted)', maxWidth: '520px', margin: '20px auto 0', lineHeight: 1.6 }}>
-            Everything you need to know about lengoAi Auto Subtitles.
+            Everything you need to know about the lengoAi Creator Suite.
           </p>
         </motion.div>
 

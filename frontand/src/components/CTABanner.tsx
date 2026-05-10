@@ -1,7 +1,7 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
-import { Captions } from 'lucide-react'
+import { Rocket } from 'lucide-react'
 
 export default function CTABanner() {
   return (
@@ -25,7 +25,7 @@ export default function CTABanner() {
           transform: 'translate(-50%, -50%)',
           width: '100vw',
           height: '600px',
-          background: 'radial-gradient(ellipse, rgba(168,85,247,0.15) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(63,89,231,0.15) 0%, transparent 70%)',
           pointerEvents: 'none',
           zIndex: 0,
         }}
@@ -43,13 +43,13 @@ export default function CTABanner() {
               width: '64px',
               height: '64px',
               borderRadius: '16px',
-              background: 'linear-gradient(135deg, #a855f7, #7b61ff)',
+              background: 'linear-gradient(135deg, #3F59E7, #1B38DC)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 0 40px rgba(168,85,247,0.4)'
+              boxShadow: '0 0 40px rgba(63,89,231,0.4)'
             }}>
-              <Captions size={32} color="#fff" />
+              <Rocket size={32} color="#fff" />
             </div>
           </div>
 
@@ -63,7 +63,7 @@ export default function CTABanner() {
               fontFamily: 'var(--font-heading)'
             }}
           >
-            Your subtitles.<br />Ready in seconds.
+            Your best content.<br />Ready in minutes.
           </h2>
           <p
             style={{
@@ -74,14 +74,14 @@ export default function CTABanner() {
               margin: '0 auto 48px'
             }}
           >
-            Join thousands of creators who use lengoAi to subtitle their content in Darija, French, English and beyond — for free.
+            Join thousands of creators who use lengoAi to design, edit, and optimize their workflow.
           </p>
           <a
-            href="/tools/auto-subtitle"
+            href="#tools"
             className="btn-banger"
             style={{ padding: '20px 48px', fontSize: '18px' }}
           >
-            Generate subtitles free →
+            Explore all tools →
           </a>
         </motion.div>
       </div>

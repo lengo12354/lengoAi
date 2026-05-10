@@ -1,24 +1,24 @@
-'use client'
+﻿'use client'
 
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { useRef } from 'react'
-import { Upload, Cpu, Download } from 'lucide-react'
+import { MousePointerClick, Cpu, Download } from 'lucide-react'
 
 const steps = [
   {
-    icon: Upload,
-    title: 'Upload Your File',
-    description: 'Drop in any audio or video file — MP3, WAV, MP4, MOV and 50+ formats. No account needed to get started.',
+    icon: MousePointerClick,
+    title: 'Choose Your Tool',
+    description: 'Select from our suite of creator tools. Whether you need auto-subtitles, a YouTube title optimizer, or a thumbnail preview, we have you covered.',
   },
   {
     icon: Cpu,
-    title: 'AI Transcribes It',
-    description: 'Our model detects the language automatically and generates word-level timestamps with 97% accuracy — including Darija, Franco, Arabic, French and English.',
+    title: 'Let AI Do The Work',
+    description: 'Our advanced AI models analyze your content, generate high-converting alternatives, or accurately transcribe your audio in seconds.',
   },
   {
     icon: Download,
-    title: 'Export & Use',
-    description: 'Download your subtitles as SRT, VTT, or copy directly into CapCut, Premiere Pro, DaVinci Resolve, or Final Cut Pro with one click.',
+    title: 'Export & Publish',
+    description: 'Download your optimized assets, copy high-CTR titles, or export subtitles directly to your favorite editing software with one click.',
   },
 ]
 
@@ -52,8 +52,8 @@ export default function HowItWorks() {
               lineHeight: 1.1,
             }}
           >
-            From upload to subtitles<br />
-            <span style={{ color: '#a855f7' }}>in under a minute.</span>
+            From idea to published<br />
+            <span style={{ color: '#3F59E7' }}>in record time.</span>
           </h2>
         </motion.div>
 
@@ -80,7 +80,7 @@ export default function HowItWorks() {
               left: '40px',
               width: '2px',
               height: lineHeight,
-              background: 'linear-gradient(to bottom, transparent, #a855f7, #7b61ff, transparent)',
+              background: 'linear-gradient(to bottom, transparent, #3F59E7, #1B38DC, transparent)',
               zIndex: 1,
             }}
             className="timeline-active"
@@ -119,7 +119,7 @@ export default function HowItWorks() {
                     position: 'relative',
                   }}
                 >
-                  <Icon size={28} color="#a855f7" strokeWidth={1.5} />
+                  <Icon size={28} color="#3F59E7" strokeWidth={1.5} />
                   <div
                     style={{
                       position: 'absolute',
@@ -130,15 +130,15 @@ export default function HowItWorks() {
                       height: '12px',
                       borderRadius: '50%',
                       background: '#020204',
-                      border: '2px solid #a855f7',
-                      boxShadow: '0 0 10px rgba(168,85,247,0.8)',
+                      border: '2px solid #3F59E7',
+                      boxShadow: '0 0 10px rgba(63,89,231,0.8)',
                     }}
                     className="timeline-dot"
                   />
                 </div>
 
                 <div style={{ paddingTop: '10px' }}>
-                  <div style={{ color: '#a855f7', fontSize: '14px', fontWeight: 600, letterSpacing: '0.1em', marginBottom: '8px', fontFamily: 'var(--font-heading)' }}>
+                  <div style={{ color: '#3F59E7', fontSize: '14px', fontWeight: 600, letterSpacing: '0.1em', marginBottom: '8px', fontFamily: 'var(--font-heading)' }}>
                     STEP 0{index + 1}
                   </div>
                   <h3 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '16px', letterSpacing: '-0.5px' }}>

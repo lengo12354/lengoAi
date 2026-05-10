@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
@@ -19,12 +19,11 @@ const plans: Plan[] = [
     name: 'Starter',
     monthlyPrice: 0,
     yearlyPrice: 0,
-    description: 'Perfect for trying lengoAi Auto Subtitles for free.',
+    description: 'Perfect for trying the lengoAi Creator Suite for free.',
     features: [
-      '5 subtitle exports per month',
-      'Up to 10 min per file',
-      'SRT & VTT export',
-      'Darija, English & French',
+      'Access to all creator tools',
+      '3 Thumbnail mockups/mo',
+      '5 Subtitle exports/mo',
       'Community support',
     ],
     cta: 'Get started free',
@@ -34,16 +33,15 @@ const plans: Plan[] = [
     name: 'Pro',
     monthlyPrice: 19,
     yearlyPrice: 15,
-    description: 'For creators and editors who subtitle regularly.',
+    description: 'For professional creators and editors who need unlimited power.',
     features: [
-      'Unlimited exports',
-      'Files up to 4 hours long',
-      'All 90+ languages + Darija',
-      'CapCut, Premiere, DaVinci & FCP export',
-      'Styled & animated subtitles',
-      'Word-level timestamps',
+      'Unlimited access to all tools',
+      'Unlimited Thumbnail Mockups',
+      'Unlimited Auto-Subtitles (Up to 4h)',
+      'All export formats (CapCut, Premiere, etc.)',
+      'High-CTR YouTube Title Generation',
       'Priority processing queue',
-      'API access (5k req/mo)',
+      'Dedicated support',
     ],
     cta: 'Start Pro trial',
     featured: true,
@@ -121,7 +119,7 @@ export default function Pricing() {
                 gap: '8px',
               }}
             >
-              Annually <span style={{ color: yearly ? '#a855f7' : '#00e5ff', fontSize: '13px' }}>-20%</span>
+              Annually <span style={{ color: yearly ? '#3F59E7' : '#94A2F2', fontSize: '13px' }}>-20%</span>
             </button>
           </div>
         </motion.div>
@@ -172,7 +170,7 @@ export default function Pricing() {
 
                     <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translate(-50%, -50%)', zIndex: 10 }}>
                       <div style={{
-                        background: 'linear-gradient(135deg, #a855f7, #7b61ff)',
+                        background: 'linear-gradient(135deg, #3F59E7, #1B38DC)',
                         color: '#fff',
                         fontSize: '12px',
                         fontWeight: 700,
@@ -182,7 +180,7 @@ export default function Pricing() {
                         display: 'flex',
                         alignItems: 'center',
                         gap: '6px',
-                        boxShadow: '0 0 20px rgba(168,85,247,0.5)',
+                        boxShadow: '0 0 20px rgba(63,89,231,0.5)',
                         whiteSpace: 'nowrap'
                       }}>
                         <Sparkles size={14} /> MOST POPULAR
@@ -223,8 +221,8 @@ export default function Pricing() {
           background: conic-gradient(
             from 0deg,
             transparent 0deg,
-            rgba(168,85,247,0.8) 90deg,
-            rgba(123,97,255,0.8) 180deg,
+            rgba(63,89,231,0.8) 90deg,
+            rgba(63,89,231,0.8) 180deg,
             transparent 270deg
           );
           animation: rotate 4s linear infinite;
@@ -260,7 +258,7 @@ function PlanContent({ plan, yearly, isFeatured }: { plan: Plan; yearly: boolean
       </div>
 
       <a
-        href={`https://wa.me/212679635087?text=${encodeURIComponent(`Salam, bghit nchri l'${plan.name} Plan ($${yearly ? plan.yearlyPrice : plan.monthlyPrice}) bach nakhod l'Tokens d'l'auto-subtitle. Achno ndir?`)}`}
+        href={`https://wa.me/212679635087?text=${encodeURIComponent(`Salam, bghit nchri l'${plan.name} Plan ($${yearly ? plan.yearlyPrice : plan.monthlyPrice}) dyal lengoAi Creator Suite. Achno ndir?`)}`}
         target="_blank"
         rel="noopener noreferrer"
         className={isFeatured ? 'btn-banger' : 'btn-ghost-banger'}
@@ -272,8 +270,8 @@ function PlanContent({ plan, yearly, isFeatured }: { plan: Plan; yearly: boolean
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {plan.features.map((feat) => (
           <div key={feat} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-            <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'rgba(168,85,247,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
-              <Check size={12} color="#a855f7" strokeWidth={3} />
+            <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'rgba(63,89,231,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+              <Check size={12} color="#3F59E7" strokeWidth={3} />
             </div>
             <span style={{ fontSize: '15px', color: '#e4e4e7', lineHeight: 1.5 }}>{feat}</span>
           </div>

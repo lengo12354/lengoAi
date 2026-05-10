@@ -2,29 +2,42 @@
 
 @layer theme {
   :root {
-    /* Pitch black basis */
-    --background: #020204;
-    --foreground: #ffffff;
-    --muted: #a1a1aa;
-    /* Cards will be rich dark translucent */
-    --card-bg: rgba(14, 14, 20, 0.4);
-    --card-border: rgba(255, 255, 255, 0.04);
+    /* New Blue Palette */
+    --color-50: #E8EBFC;
+    --color-100: #BEC7F7;
+    --color-200: #94A2F2;
+    --color-300: #6A7DED;
+    --color-400: #3F59E7;
+    --color-500: #1B38DC;
+    --color-600: #162DB2;
+    --color-700: #112388;
+    --color-800: #0C185E;
+    --color-900: #060D33;
+    --color-950: #010208;
 
-    /* Banger Accents */
-    --accent-primary: #7b61ff;
-    --accent-secondary: #00e5ff;
-    --accent-glow: #ff007b;
+    /* Deep dark blue basis */
+    --background: #010208;
+    --foreground: #ffffff;
+    --muted: #94A2F2;
+    /* Cards — dark blue translucent */
+    --card-bg: rgba(12, 24, 94, 0.35);
+    --card-border: rgba(107, 125, 237, 0.12);
+
+    /* Accents */
+    --accent-primary: #3F59E7;
+    --accent-secondary: #6A7DED;
+    --accent-glow: #1B38DC;
   }
 
   .light {
-    --background: #fafafc;
-    --foreground: #020204;
-    --muted: #52525b;
+    --background: #E8EBFC;
+    --foreground: #010208;
+    --muted: #162DB2;
     --card-bg: rgba(255, 255, 255, 0.6);
-    --card-border: rgba(0, 0, 0, 0.06);
-    --accent-primary: #6c63ff;
-    --accent-secondary: #00d4aa;
-    --accent-glow: #ff4785;
+    --card-border: rgba(63, 89, 231, 0.12);
+    --accent-primary: #1B38DC;
+    --accent-secondary: #3F59E7;
+    --accent-glow: #6A7DED;
   }
 }
 
@@ -49,7 +62,6 @@
 
   html {
     scroll-behavior: smooth;
-    /* Smooth contrast */
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -74,7 +86,7 @@
   }
 
   ::selection {
-    background: rgba(123, 97, 255, 0.3);
+    background: rgba(63, 89, 231, 0.35);
     color: #ffffff;
   }
 
@@ -87,12 +99,12 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(63, 89, 231, 0.3);
     border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(63, 89, 231, 0.5);
   }
 }
 
@@ -111,20 +123,20 @@
 
   /* Typography */
   .gradient-text {
-    background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #94A2F2 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .gradient-text-accent {
-    background: linear-gradient(135deg, #7b61ff 0%, #00e5ff 100%);
+    background: linear-gradient(135deg, #3F59E7 0%, #94A2F2 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* Cards - Bento Style */
+  /* Cards — Bento Style */
   .glass-card {
     background: var(--card-bg);
     border: 1px solid var(--card-border);
@@ -147,17 +159,16 @@
     font-family: var(--font-heading), sans-serif;
     font-weight: 600;
     font-size: 15px;
-    color: #000;
+    color: #fff;
     cursor: pointer;
     text-decoration: none;
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    background: linear-gradient(135deg, #ffffff, #d4d4d8);
+    background: linear-gradient(135deg, #3F59E7, #1B38DC);
     background-size: 200% auto;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(107, 125, 237, 0.4);
     box-shadow: 
-      0 4px 15px rgba(255, 255, 255, 0.15), 
-      inset 0 2px 4px rgba(255, 255, 255, 1), 
-      inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+      0 4px 20px rgba(27, 56, 220, 0.4), 
+      inset 0 1px 1px rgba(255, 255, 255, 0.15);
     text-shadow: none;
     z-index: 1;
     overflow: hidden;
@@ -167,7 +178,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, #f4f4f5, #ffffff);
+    background: linear-gradient(135deg, #6A7DED, #3F59E7);
     background-size: 200% auto;
     opacity: 0;
     transition: opacity 0.4s ease;
@@ -181,10 +192,9 @@
   .btn-banger:hover {
     transform: translateY(-3px) scale(1.02);
     box-shadow: 
-      0 12px 30px rgba(255, 255, 255, 0.25), 
-      inset 0 2px 4px rgba(255, 255, 255, 1), 
-      inset 0 -2px 4px rgba(0, 0, 0, 0.1);
-    border-color: #ffffff;
+      0 12px 40px rgba(27, 56, 220, 0.6), 
+      inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    border-color: rgba(148, 162, 242, 0.5);
   }
 
   .btn-ghost-banger {
@@ -194,8 +204,8 @@
     gap: 8px;
     padding: 14px 28px;
     border-radius: 100px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--card-border);
+    background: rgba(63, 89, 231, 0.08);
+    border: 1px solid rgba(107, 125, 237, 0.2);
     color: var(--foreground);
     font-family: var(--font-heading), sans-serif;
     font-size: 15px;
@@ -205,21 +215,21 @@
   }
 
   .btn-ghost-banger:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(63, 89, 231, 0.18);
+    border-color: rgba(107, 125, 237, 0.4);
   }
 
   .section-badge {
     display: inline-flex;
     align-items: center;
     padding: 6px 14px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(63, 89, 231, 0.08);
+    border: 1px solid rgba(107, 125, 237, 0.2);
     border-radius: 100px;
     font-size: 13px;
     font-weight: 500;
     font-family: var(--font-heading);
-    color: var(--muted);
+    color: var(--accent-secondary);
     letter-spacing: 0.02em;
     margin-bottom: 24px;
   }
@@ -278,7 +288,7 @@
   border-radius: inherit;
   padding: 1px;
   background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y),
-      rgba(123, 97, 255, 0.4),
+      rgba(63, 89, 231, 0.4),
       transparent 40%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;

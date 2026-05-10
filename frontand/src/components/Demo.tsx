@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { motion } from 'framer-motion'
 import { ArrowRight, Code } from 'lucide-react'
@@ -7,9 +7,9 @@ const terminalLines = [
   { text: '~ lengoai login', delay: 0.1, color: '#fff' },
   { text: 'Authenticate successful. Welcome back.', delay: 0.5, color: 'var(--muted)' },
   { text: '~ lengoai generate ui "glassmorphism bento box"', delay: 1.2, color: '#fff' },
-  { text: '→ Analyzing intent...', delay: 1.8, color: '#00e5ff' },
-  { text: '→ Constructing responsive grid... ███████ 100%', delay: 2.2, color: '#7b61ff' },
-  { text: '→ Applying Tailwind v4 utilities...', delay: 2.6, color: '#00e5ff' },
+  { text: '→ Analyzing intent...', delay: 1.8, color: '#94A2F2' },
+  { text: '→ Constructing responsive grid... ███████ 100%', delay: 2.2, color: '#1B38DC' },
+  { text: '→ Applying Tailwind v4 utilities...', delay: 2.6, color: '#94A2F2' },
   { text: '✓ UI Component ready in 420ms.', delay: 3.0, color: '#28c840' },
   { text: '', delay: 3.2, color: 'transparent' },
   { text: 'export default function Bento() {', delay: 3.4, color: '#a1a1aa' },
@@ -131,7 +131,7 @@ export default function Demo() {
                     display: 'inline-block',
                     width: '8px',
                     height: '16px',
-                    background: '#00e5ff',
+                    background: '#94A2F2',
                     verticalAlign: 'middle',
                     animation: 'blink 1s step-end infinite',
                     marginLeft: '8px',

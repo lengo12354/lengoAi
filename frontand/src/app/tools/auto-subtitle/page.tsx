@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -239,14 +239,14 @@ export default function AutoSubtitlePage() {
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
             <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'linear-gradient(135deg, rgba(138,43,226,0.4), rgba(0,229,255,0.2))', border: '1px solid rgba(138,43,226,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Captions size={28} color="#a855f7" />
+              <Captions size={28} color="#3F59E7" />
             </div>
             <h1 style={{ fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: 800, letterSpacing: '-1px', background: 'linear-gradient(135deg, #fff, #a1a1aa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
-              AI <span style={{ color: '#a855f7', WebkitTextFillColor: '#a855f7' }}>Auto Subtitles</span>
+              AI <span style={{ color: '#3F59E7', WebkitTextFillColor: '#3F59E7' }}>Auto Subtitles</span>
             </h1>
           </div>
           <p style={{ color: 'var(--muted)', fontSize: '18px', maxWidth: '620px' }}>
-            Generate accurate subtitles from any audio or video. Supports <strong style={{ color: '#a855f7' }}>Darija</strong>, English, French, and 90+ languages.
+            Generate accurate subtitles from any audio or video. Supports <strong style={{ color: '#3F59E7' }}>Darija</strong>, English, French, and 90+ languages.
           </p>
         </div>
 
@@ -284,7 +284,7 @@ export default function AutoSubtitlePage() {
                 <p style={{ color: 'var(--muted)', fontSize: '13px', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '12px' }}>Select Language</p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
                   {LANGUAGE_OPTIONS.map(opt => (
-                    <button key={opt.value} onClick={() => setLanguage(opt.value)} style={{ padding: '16px', borderRadius: '14px', border: language === opt.value ? '1.5px solid #a855f7' : '1px solid rgba(255,255,255,0.07)', background: language === opt.value ? 'rgba(168,85,247,0.12)' : 'rgba(255,255,255,0.03)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.2s', color: '#fff' }}>
+                    <button key={opt.value} onClick={() => setLanguage(opt.value)} style={{ padding: '16px', borderRadius: '14px', border: language === opt.value ? '1.5px solid #3F59E7' : '1px solid rgba(255,255,255,0.07)', background: language === opt.value ? 'rgba(63,89,231,0.12)' : 'rgba(255,255,255,0.03)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.2s', color: '#fff' }}>
                       <span style={{ fontSize: '22px', display: 'block', marginBottom: '8px' }}>{opt.emoji}</span>
                       <span style={{ fontSize: '14px', fontWeight: 600, display: 'block', marginBottom: '2px' }}>{opt.label}</span>
                       <span style={{ fontSize: '12px', color: 'var(--muted)', display: 'block' }}>{opt.desc}</span>
@@ -295,13 +295,13 @@ export default function AutoSubtitlePage() {
 
               {/* Upload Zone */}
               <div onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop} onClick={() => !file && fileInputRef.current?.click()}
-                style={{ border: `2px dashed ${isDragging ? '#a855f7' : file ? 'rgba(168,85,247,0.4)' : 'rgba(255,255,255,0.08)'}`, borderRadius: '20px', padding: '40px 32px', cursor: file ? 'default' : 'pointer', transition: 'all 0.3s ease', background: isDragging ? 'rgba(168,85,247,0.08)' : file ? 'rgba(168,85,247,0.05)' : 'rgba(255,255,255,0.02)', textAlign: 'center', marginBottom: '24px' }}>
+                style={{ border: `2px dashed ${isDragging ? '#3F59E7' : file ? 'rgba(63,89,231,0.4)' : 'rgba(255,255,255,0.08)'}`, borderRadius: '20px', padding: '40px 32px', cursor: file ? 'default' : 'pointer', transition: 'all 0.3s ease', background: isDragging ? 'rgba(63,89,231,0.08)' : file ? 'rgba(63,89,231,0.05)' : 'rgba(255,255,255,0.02)', textAlign: 'center', marginBottom: '24px' }}>
                 <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.flac,.mp4,.mov,.webm,.mkv" style={{ display: 'none' }} />
                 <AnimatePresence mode="wait">
                   {file ? (
                     <motion.div key="file" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-                      <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(168,85,247,0.15)', border: '1px solid rgba(168,85,247,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-                        <FileAudio size={30} color="#a855f7" />
+                      <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(63,89,231,0.15)', border: '1px solid rgba(63,89,231,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                        <FileAudio size={30} color="#3F59E7" />
                       </div>
                       <p style={{ color: '#fff', fontWeight: 600, fontSize: '16px', marginBottom: '4px' }}>{file.name}</p>
                       <p style={{ color: 'var(--muted)', fontSize: '13px', marginBottom: '16px' }}>{(file.size / 1024 / 1024).toFixed(2)} MB</p>
@@ -352,7 +352,7 @@ export default function AutoSubtitlePage() {
                         </div>
                         <input
                           type="range" min="7" max="100" value={maxLength} onChange={(e) => setMaxLength(Number(e.target.value))}
-                          style={{ width: '100%', accentColor: '#a855f7' }}
+                          style={{ width: '100%', accentColor: '#3F59E7' }}
                         />
                       </div>
 
@@ -364,7 +364,7 @@ export default function AutoSubtitlePage() {
                         </div>
                         <input
                           type="range" min="0" max="10" step="0.1" value={minDuration} onChange={(e) => setMinDuration(Number(e.target.value))}
-                          style={{ width: '100%', accentColor: '#a855f7' }}
+                          style={{ width: '100%', accentColor: '#3F59E7' }}
                         />
                       </div>
 
@@ -376,7 +376,7 @@ export default function AutoSubtitlePage() {
                         </div>
                         <input
                           type="range" min="0" max="60" value={gapFrames} onChange={(e) => setGapFrames(Number(e.target.value))}
-                          style={{ width: '100%', accentColor: '#a855f7' }}
+                          style={{ width: '100%', accentColor: '#3F59E7' }}
                         />
                       </div>
 
@@ -387,14 +387,14 @@ export default function AutoSubtitlePage() {
                           <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#fff', fontSize: '14px', cursor: 'pointer' }}>
                             <input
                               type="radio" name="lines" value="1" checked={maxLines === 1} onChange={() => setMaxLines(1)}
-                              style={{ accentColor: '#a855f7' }}
+                              style={{ accentColor: '#3F59E7' }}
                             />
                             Single
                           </label>
                           <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#fff', fontSize: '14px', cursor: 'pointer' }}>
                             <input
                               type="radio" name="lines" value="2" checked={maxLines === 2} onChange={() => setMaxLines(2)}
-                              style={{ accentColor: '#a855f7' }}
+                              style={{ accentColor: '#3F59E7' }}
                             />
                             Double
                           </label>
@@ -415,8 +415,8 @@ export default function AutoSubtitlePage() {
             <motion.div key="result" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
 
               {/* Success Header */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', padding: '16px 20px', borderRadius: '16px', background: 'rgba(168,85,247,0.1)', border: '1px solid rgba(168,85,247,0.25)' }}>
-                <CheckCircle2 size={22} color="#a855f7" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', padding: '16px 20px', borderRadius: '16px', background: 'rgba(63,89,231,0.1)', border: '1px solid rgba(63,89,231,0.25)' }}>
+                <CheckCircle2 size={22} color="#3F59E7" />
                 <div style={{ flex: 1 }}>
                   <p style={{ color: '#fff', fontWeight: 600, margin: 0 }}>Subtitles Generated!</p>
                   <p style={{ color: 'var(--muted)', fontSize: '13px', margin: 0 }}>{subtitles.length} blocks from &quot;{file?.name}&quot;</p>
@@ -435,17 +435,17 @@ export default function AutoSubtitlePage() {
                     src={audioUrl}
                     controls
                     onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
-                    style={{ width: '100%', borderRadius: '8px', outline: 'none', accentColor: '#a855f7' }}
+                    style={{ width: '100%', borderRadius: '8px', outline: 'none', accentColor: '#3F59E7' }}
                   />
                 </div>
               )}
 
               {/* Download Buttons */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '24px' }}>
-                <button onClick={handleDownloadSrt} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #a855f7, #7c3aed)', color: '#fff', fontSize: '15px', fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 20px rgba(168,85,247,0.3)' }}>
+                <button onClick={handleDownloadSrt} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', padding: '14px', borderRadius: '14px', border: 'none', background: 'linear-gradient(135deg, #3F59E7, #162DB2)', color: '#fff', fontSize: '15px', fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 20px rgba(63,89,231,0.3)' }}>
                   <Download size={18} />Download .SRT
                 </button>
-                <button onClick={handleDownloadVtt} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', padding: '14px', borderRadius: '14px', border: '1.5px solid rgba(168,85,247,0.5)', background: 'rgba(168,85,247,0.08)', color: '#a855f7', fontSize: '15px', fontWeight: 700, cursor: 'pointer' }}>
+                <button onClick={handleDownloadVtt} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', padding: '14px', borderRadius: '14px', border: '1.5px solid rgba(63,89,231,0.5)', background: 'rgba(63,89,231,0.08)', color: '#3F59E7', fontSize: '15px', fontWeight: 700, cursor: 'pointer' }}>
                   <FileText size={18} />Download .VTT
                 </button>
               </div>
@@ -453,7 +453,7 @@ export default function AutoSubtitlePage() {
               {/* Synchronized Subtitle Preview */}
               <div>
                 <p style={{ color: 'var(--muted)', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '12px' }}>
-                  Subtitle Preview — <span style={{ color: activeIdx >= 0 ? '#a855f7' : 'var(--muted)' }}>{activeIdx >= 0 ? `Block ${subtitles[activeIdx].index} active` : 'Play audio to sync'}</span>
+                  Subtitle Preview — <span style={{ color: activeIdx >= 0 ? '#3F59E7' : 'var(--muted)' }}>{activeIdx >= 0 ? `Block ${subtitles[activeIdx].index} active` : 'Play audio to sync'}</span>
                 </p>
                 <div ref={listRef} style={{ position: 'relative', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '16px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {subtitles.map((sub, i) => {
@@ -469,17 +469,17 @@ export default function AutoSubtitlePage() {
                         style={{
                           padding: '12px 16px',
                           borderRadius: '10px',
-                          background: isActive ? 'rgba(168,85,247,0.18)' : 'rgba(255,255,255,0.02)',
-                          border: isActive ? '1.5px solid rgba(168,85,247,0.5)' : '1px solid rgba(255,255,255,0.05)',
+                          background: isActive ? 'rgba(63,89,231,0.18)' : 'rgba(255,255,255,0.02)',
+                          border: isActive ? '1.5px solid rgba(63,89,231,0.5)' : '1px solid rgba(255,255,255,0.05)',
                           cursor: 'pointer',
                           transition: 'all 0.25s ease',
                           transform: isActive ? 'scale(1.01)' : 'scale(1)',
                         }}
                       >
                         <div style={{ display: 'flex', gap: '10px', marginBottom: '4px', alignItems: 'center' }}>
-                          <span style={{ fontSize: '10px', color: isActive ? '#a855f7' : 'rgba(168,85,247,0.5)', fontWeight: 700, minWidth: '18px' }}>{sub.index}</span>
+                          <span style={{ fontSize: '10px', color: isActive ? '#3F59E7' : 'rgba(63,89,231,0.5)', fontWeight: 700, minWidth: '18px' }}>{sub.index}</span>
                           <span style={{ fontSize: '10px', color: isActive ? 'rgba(255,255,255,0.6)' : 'var(--muted)', fontFamily: 'monospace' }}>{sub.rawTimestamp}</span>
-                          {isActive && <span style={{ marginLeft: 'auto', fontSize: '10px', background: '#a855f7', color: '#fff', padding: '1px 8px', borderRadius: '99px', fontWeight: 700 }}>▶ NOW</span>}
+                          {isActive && <span style={{ marginLeft: 'auto', fontSize: '10px', background: '#3F59E7', color: '#fff', padding: '1px 8px', borderRadius: '99px', fontWeight: 700 }}>▶ NOW</span>}
                         </div>
                         <p style={{ margin: 0, color: isActive ? '#fff' : 'rgba(255,255,255,0.7)', fontSize: '15px', lineHeight: 1.6, fontWeight: isActive ? 600 : 400, direction: language === 'darija_ar' ? 'rtl' : 'ltr' }}>
                           {sub.text}

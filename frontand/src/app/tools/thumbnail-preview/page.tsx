@@ -9,7 +9,7 @@ export default function ThumbnailPreviewPage() {
   const [mounted, setMounted] = useState(false)
   const format = 'card'
   const [image, setImage] = useState<string | null>(null)
-  const [bgColor, setBgColor] = useState('#FC3F1E')
+  const [bgColor, setBgColor] = useState('#010208')
   const [padding, setPadding] = useState(20)
   const [title, setTitle] = useState('Your Video Title Goes Here')
   const [channel, setChannel] = useState('Channel Name')
@@ -60,7 +60,7 @@ export default function ThumbnailPreviewPage() {
   return (
     <main style={{ minHeight: '100vh', paddingTop: '100px', paddingBottom: '100px', position: 'relative' }}>
       {/* Background glow */}
-      <div style={{ position: 'fixed', top: '0', left: '50%', transform: 'translateX(-50%)', width: '100vw', height: '500px', background: 'radial-gradient(ellipse at top, rgba(252, 63, 30, 0.05) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'fixed', top: '0', left: '50%', transform: 'translateX(-50%)', width: '100vw', height: '500px', background: 'radial-gradient(ellipse at top, rgba(63, 89, 231, 0.07) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
 
       <div className="container-xl" style={{ position: 'relative', zIndex: 1 }}>
         {/* Header */}
@@ -70,11 +70,11 @@ export default function ThumbnailPreviewPage() {
             <ArrowLeft size={16} /> Back to Tools
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(252, 63, 30, 0.1)', border: '1px solid rgba(252, 63, 30, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <MonitorPlay size={24} color="#FC3F1E" />
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(63, 89, 231, 0.1)', border: '1px solid rgba(63, 89, 231, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <MonitorPlay size={24} color="#3F59E7" />
             </div>
             <h1 style={{ fontSize: 'clamp(24px, 5vw, 36px)', fontWeight: 600, letterSpacing: '-1px', color: '#fff', margin: 0 }}>
-              Thumbnail <span style={{ color: '#FC3F1E' }}>Preview</span>
+              Thumbnail <span style={{ color: '#3F59E7' }}>Preview</span>
             </h1>
           </div>
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', maxWidth: '580px', lineHeight: 1.6, margin: 0 }}>
@@ -302,7 +302,7 @@ export default function ThumbnailPreviewPage() {
                 </div>
                 <input
                   type="range" min="0" max="100" value={padding} onChange={(e) => setPadding(Number(e.target.value))}
-                  style={{ width: '100%', accentColor: '#FC3F1E' }}
+                  style={{ width: '100%', accentColor: '#3F59E7' }}
                 />
               </div>
             )}
@@ -360,14 +360,14 @@ export default function ThumbnailPreviewPage() {
               <button
                 onClick={() => handleDownload(false)}
                 className="btn-banger no-hover-btn"
-                style={{ padding: '14px', background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', fontSize: '13px' }}
+                style={{ padding: '14px', background: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', fontSize: '13px', boxShadow: 'none' }}
               >
                 <Download size={16} /> Without BG
               </button>
               <button
                 onClick={() => handleDownload(true)}
                 className="btn-banger no-hover-btn"
-                style={{ padding: '14px', background: 'linear-gradient(135deg, #FC3F1E, #FF6B4A)', color: '#fff', border: 'none', fontSize: '13px' }}
+                style={{ padding: '14px', background: 'linear-gradient(135deg, #3F59E7, #1B38DC)', color: '#fff', border: 'none', fontSize: '13px', boxShadow: 'none' }}
               >
                 <Download size={16} /> With BG
               </button>

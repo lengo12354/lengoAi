@@ -1,10 +1,10 @@
-'use client'
+﻿'use client'
 
-import { Captions } from 'lucide-react'
+import { Rocket } from 'lucide-react'
 
 const footerLinks = {
   Product: ['Overview', 'Features', 'Pricing', 'Changelog', 'Roadmap'],
-  Tool: ['Auto Subtitles', 'Darija Support', 'Export Formats', 'API Reference', 'Integrations'],
+  Tool: ['YouTube Thumbnail Preview', 'Auto Subtitles', 'Title Optimizer', 'API Reference'],
   Company: ['About', 'Blog', 'Careers', 'Brand Assets', 'Contact'],
   Legal: ['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'Security'],
 }
@@ -51,19 +51,19 @@ export default function Footer() {
                 style={{
                   width: '32px',
                   height: '32px',
-                  background: 'linear-gradient(135deg, #a855f7, #7b61ff)',
+                  background: 'linear-gradient(135deg, #3F59E7, #1B38DC)',
                   borderRadius: '10px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <Captions size={16} color="white" strokeWidth={2.5} />
+                <Rocket size={16} color="white" strokeWidth={2.5} />
               </div>
               lengoAi
             </a>
             <p style={{ fontSize: '15px', color: 'var(--muted)', lineHeight: 1.6 }}>
-              AI-powered subtitles for Darija, French, English and 90+ languages. Generate, style and export captions in under a minute.
+              The ultimate AI toolkit for creators. Generate thumbnails, auto-subtitle videos in 90+ languages, and optimize your content for maximum reach.
             </p>
           </div>
 

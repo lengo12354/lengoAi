@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -124,7 +124,7 @@ export default function AuthPage() {
         style={{
           position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
           width: '600px', height: '600px',
-          background: 'radial-gradient(circle, rgba(168,85,247,0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(63,89,231,0.1) 0%, transparent 70%)',
           filter: 'blur(80px)', zIndex: 0, pointerEvents: 'none',
         }}
       />
@@ -143,9 +143,9 @@ export default function AuthPage() {
             <a href="/" style={{ textDecoration: 'none' }}>
               <div style={{
                 width: '48px', height: '48px',
-                background: 'linear-gradient(135deg, #a855f7, #7b61ff)',
+                background: 'linear-gradient(135deg, #3F59E7, #1B38DC)',
                 borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 0 30px rgba(168, 85, 247, 0.4)',
+                boxShadow: '0 0 30px rgba(63, 89, 231, 0.4)',
               }}>
                 <Captions size={24} color="white" strokeWidth={2} />
               </div>
@@ -207,7 +207,7 @@ export default function AuthPage() {
                 <div style={{
                   padding: '12px 16px', borderRadius: '8px', fontSize: '14px',
                   background: message.type === 'success' ? 'rgba(0, 229, 255, 0.1)' : 'rgba(255, 107, 107, 0.1)',
-                  color: message.type === 'success' ? '#00e5ff' : '#ff6b6b',
+                  color: message.type === 'success' ? '#94A2F2' : '#ff6b6b',
                   border: `1px solid ${message.type === 'success' ? 'rgba(0, 229, 255, 0.2)' : 'rgba(255, 107, 107, 0.2)'}`
                 }}>
                   {message.text}
@@ -233,7 +233,7 @@ export default function AuthPage() {
                       background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
                       color: 'white', fontSize: '15px', outline: 'none', transition: 'border 0.2s ease',
                     }}
-                    onFocus={(e) => e.target.style.borderColor = 'rgba(168,85,247,0.5)'}
+                    onFocus={(e) => e.target.style.borderColor = 'rgba(63,89,231,0.5)'}
                     onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                   />
                 </div>
@@ -253,7 +253,7 @@ export default function AuthPage() {
                       background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
                       color: 'white', fontSize: '15px', outline: 'none', transition: 'border 0.2s ease',
                     }}
-                    onFocus={(e) => e.target.style.borderColor = 'rgba(168,85,247,0.5)'}
+                    onFocus={(e) => e.target.style.borderColor = 'rgba(63,89,231,0.5)'}
                     onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                   />
                 </div>
@@ -293,7 +293,7 @@ export default function AuthPage() {
                           background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
                           color: 'white', fontSize: '15px', outline: 'none', transition: 'border 0.2s ease',
                         }}
-                        onFocus={(e) => e.target.style.borderColor = 'rgba(168,85,247,0.5)'}
+                        onFocus={(e) => e.target.style.borderColor = 'rgba(63,89,231,0.5)'}
                         onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                       />
                     </div>
@@ -329,7 +329,7 @@ export default function AuthPage() {
                         color: 'white', fontSize: '24px', letterSpacing: '8px', textAlign: 'center',
                         outline: 'none', transition: 'border 0.2s ease', fontWeight: 'bold'
                       }}
-                      onFocus={(e) => e.target.style.borderColor = 'rgba(168,85,247,0.5)'}
+                      onFocus={(e) => e.target.style.borderColor = 'rgba(63,89,231,0.5)'}
                       onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                     />
                   </div>
@@ -372,7 +372,7 @@ export default function AuthPage() {
                           background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
                           color: 'white', fontSize: '15px', outline: 'none', transition: 'border 0.2s ease',
                         }}
-                        onFocus={(e) => e.target.style.borderColor = 'rgba(168,85,247,0.5)'}
+                        onFocus={(e) => e.target.style.borderColor = 'rgba(63,89,231,0.5)'}
                         onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                       />
                     </div>

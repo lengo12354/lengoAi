@@ -31,64 +31,24 @@ export default function Hero() {
         perspective: '1000px',
       }}
     >
-      {/* Glows */}
+      {/* Background Image */}
       <div
         style={{
           position: 'absolute',
-          top: '10%',
+          top: 0,
           left: '50%',
-          transform: 'translateX(-50%)',
-          width: '80vw',
-          height: '600px',
-          background: 'radial-gradient(circle, rgba(168,85,247,0.15) 0%, transparent 60%)',
-          filter: 'blur(80px)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          top: '30%',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '40vw',
-          height: '400px',
-          background: 'radial-gradient(circle, rgba(123,97,255,0.1) 0%, transparent 50%)',
-          filter: 'blur(60px)',
+          transform: 'translateX(-50%) scale(1.05)',
+          width: '100vw',
+          height: '110vh',
+          background: 'url(/hero-bg.webp) no-repeat center center',
+          backgroundSize: 'cover',
+          filter: 'blur(12px)',
           pointerEvents: 'none',
           zIndex: 0,
         }}
       />
 
-      <div className="container-xl" style={{ position: 'relative', zIndex: 1, textAlign: 'center', width: '100%', paddingTop: '100px' }}>
-
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.05 }}
-          style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px' }}
-        >
-          <span style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '8px 20px',
-            borderRadius: '100px',
-            background: 'rgba(168,85,247,0.1)',
-            border: '1px solid rgba(168,85,247,0.25)',
-            fontSize: '13px',
-            fontWeight: 600,
-            color: '#c084fc',
-            fontFamily: 'var(--font-heading)',
-            letterSpacing: '0.05em',
-          }}>
-            <Captions size={14} />
-            AI-Powered Auto Subtitles — Darija, English, French & 90+ Languages
-          </span>
-        </motion.div>
+      <div className="container-xl" style={{ position: 'relative', zIndex: 1, textAlign: 'center', width: '100%', paddingTop: '0' }}>
 
         {/* Headline */}
         <motion.h1
@@ -104,8 +64,8 @@ export default function Hero() {
             textShadow: '0 10px 40px rgba(0,0,0,0.5)',
           }}
         >
-          Subtitles in seconds.<br />
-          <span className="gradient-text-accent">In any language.</span>
+          Focus on creating.<br />
+          <span className="gradient-text-accent">Let AI do the rest.</span>
         </motion.h1>
 
         {/* Subhead */}
@@ -121,7 +81,7 @@ export default function Hero() {
             margin: '0 auto 48px',
           }}
         >
-          Upload your audio or video and get perfectly timed subtitles in Darija (Arabic & Franco), English, French and 90+ more languages — exported to SRT, VTT, CapCut, Premiere and more.
+          A powerful suite of AI tools built for Graphic Designers, YouTubers, and Video Editors. Generate thumbnails, auto-subtitle videos, optimize titles, and more all in one place.
         </motion.p>
 
         {/* CTAs */}
@@ -131,8 +91,8 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '72px' }}
         >
-          <a href="/tools/auto-subtitle" className="btn-banger" style={{ padding: '18px 40px', fontSize: '16px' }}>
-            Generate subtitles free <ArrowRight size={18} />
+          <a href="#tools" className="btn-banger" style={{ padding: '18px 40px', fontSize: '16px' }}>
+            Explore Tools <ArrowRight size={18} />
           </a>
           <a href="#how-it-works" className="btn-ghost-banger" style={{ padding: '18px 32px', fontSize: '16px' }}>
             <Play size={16} fill="currentColor" />
