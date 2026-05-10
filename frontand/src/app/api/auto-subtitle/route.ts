@@ -33,13 +33,19 @@ const PAUSE_THRESHOLD = 0.35
 
 interface Word { word: string; start: number; end: number }
 
-// Build SRT from word-level timestamps — one subtitle per natural spoken phrase (pause-based)
-function wordsToSrt(words: Word[]): string {
+function wordsToSrt(words: Word[], options: { maxLength: number, minDuration: number, gapFrames: number, maxLines: number }): string {
   if (!words || words.length === 0) return ''
 
-  const lines: { start: number; end: number; text: string }[] = []
-  let currentWords: string[] = []
-  let lineStart = words[0].start
+  const { maxLength, minDuration, gapFrames, maxLines } = options
+  const gapSeconds = gapFrames / 24 // assuming 24 fps
+
+  const PAUSE_THRESHOLD = 0.35
+
+  const blocks: { start: number; end: number; lines: string[] }[] = []
+
+  let currentBlockLines: string[] = []
+  let currentLineWords: string[] = []
+  let blockStart = words[0].start
   let prevEnd = words[0].end
 
   for (let i = 0; i < words.length; i++) {
@@ -49,24 +55,70 @@ function wordsToSrt(words: Word[]): string {
 
     const gap = i > 0 ? w.start - prevEnd : 0
 
-    // New subtitle when there's a significant pause OR block is too long
-    if ((gap > PAUSE_THRESHOLD || currentWords.length >= 10) && currentWords.length > 0) {
-      lines.push({ start: lineStart, end: prevEnd, text: currentWords.join(' ') })
-      currentWords = []
-      lineStart = w.start
+    const currentLineLength = currentLineWords.join(' ').length
+    const potentialLength = currentLineLength === 0 ? clean.length : currentLineLength + 1 + clean.length
+
+    let startNewBlock = false
+    let startNewLine = false
+
+    if (gap > PAUSE_THRESHOLD) {
+      startNewBlock = true
+    } else if (potentialLength > maxLength) {
+      if (currentBlockLines.length + 1 >= maxLines) {
+        startNewBlock = true
+      } else {
+        startNewLine = true
+      }
     }
 
-    currentWords.push(clean)
+    if (startNewBlock) {
+      if (currentLineWords.length > 0) {
+        currentBlockLines.push(currentLineWords.join(' '))
+      }
+      if (currentBlockLines.length > 0) {
+        let finalEnd = prevEnd
+        if (finalEnd - blockStart < minDuration) {
+          finalEnd = blockStart + minDuration
+        }
+        blocks.push({ start: blockStart, end: finalEnd, lines: currentBlockLines })
+      }
+
+      currentBlockLines = []
+      currentLineWords = [clean]
+      blockStart = w.start
+    } else if (startNewLine) {
+      currentBlockLines.push(currentLineWords.join(' '))
+      currentLineWords = [clean]
+    } else {
+      currentLineWords.push(clean)
+    }
+
     prevEnd = w.end
   }
 
-  // Push last line
-  if (currentWords.length > 0) {
-    lines.push({ start: lineStart, end: prevEnd, text: currentWords.join(' ') })
+  if (currentLineWords.length > 0) {
+    currentBlockLines.push(currentLineWords.join(' '))
+  }
+  if (currentBlockLines.length > 0) {
+    let finalEnd = prevEnd
+    if (finalEnd - blockStart < minDuration) {
+      finalEnd = blockStart + minDuration
+    }
+    blocks.push({ start: blockStart, end: finalEnd, lines: currentBlockLines })
   }
 
-  return lines
-    .map((line, i) => `${i + 1}\n${toSrtTime(line.start)} --> ${toSrtTime(line.end)}\n${line.text}`)
+  // apply gapFrames
+  for (let i = 0; i < blocks.length - 1; i++) {
+    const current = blocks[i]
+    const next = blocks[i + 1]
+
+    if (current.end > next.start - gapSeconds) {
+      current.end = Math.max(current.start + 0.1, next.start - gapSeconds)
+    }
+  }
+
+  return blocks
+    .map((block, i) => `${i + 1}\n${toSrtTime(block.start)} --> ${toSrtTime(block.end)}\n${block.lines.join('\n')}`)
     .join('\n\n')
 }
 
@@ -105,6 +157,12 @@ export async function POST(req: Request) {
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
     let srtOutput = ''
 
+    const maxLength = parseInt((formData.get('maxLength') as string) || '42')
+    const minDuration = parseFloat((formData.get('minDuration') as string) || '0')
+    const gapFrames = parseInt((formData.get('gapFrames') as string) || '0')
+    const maxLines = parseInt((formData.get('maxLines') as string) || '1')
+    const srtOptions = { maxLength, minDuration, gapFrames, maxLines }
+
     if (language === 'other') {
       // Original logic for "other" languages
       mp3Path = path.join(os.tmpdir(), `${randId}_out.mp3`)
@@ -128,13 +186,13 @@ export async function POST(req: Request) {
         response_format: 'verbose_json',
         timestamp_granularities: ['word'],
       }) as any
-      srtOutput = wordsToSrt(result.words || [])
+      srtOutput = wordsToSrt(result.words || [], srtOptions)
 
     } else {
       // Advanced logic for Darija (darija_ar and darija_fr)
       console.log(`[Auto-Subtitle] Preprocessing and segmenting audio for Darija...`)
       const chunkPattern = path.join(os.tmpdir(), `${randId}_chunk_%03d.wav`)
-      
+
       // Convert to 16kHz mono WAV, normalize (loudnorm), and split into 60s chunks
       await new Promise((resolve, reject) => {
         const ffmpeg = spawn(ffmpegExePath, [
@@ -158,11 +216,11 @@ export async function POST(req: Request) {
 
       console.log(`[Auto-Subtitle] Processing ${chunkFiles.length} chunks with Whisper (temp=0)...`)
       let allWords: Word[] = []
-      
+
       for (let i = 0; i < chunkFiles.length; i++) {
         const chunkFile = chunkFiles[i]
         const offset = i * 60 // 60 seconds per chunk
-        
+
         const result = await groq.audio.transcriptions.create({
           file: fs.createReadStream(chunkFile),
           model: 'whisper-large-v3',
@@ -183,7 +241,7 @@ export async function POST(req: Request) {
         }
       }
 
-      const arabicSrt = wordsToSrt(allWords)
+      const arabicSrt = wordsToSrt(allWords, srtOptions)
 
       if (language === 'darija_ar') {
         console.log(`[Auto-Subtitle] LLaMA-3 → correcting Darija Arabic...`)
@@ -195,7 +253,7 @@ export async function POST(req: Request) {
 Fix errors, split merged words, and convert to natural Darija.
 STRICT RULES:
 1. Keep ALL index numbers and timestamps EXACTLY as they are.
-2. DO NOT MERGE lines or blocks together.
+2. DO NOT MERGE lines or blocks together. Maintain the exact same number of lines and blocks. PRESERVE ALL LINE BREAKS (\n) inside the text blocks.
 3. DO NOT add any punctuation (no periods, commas, or question marks). Strip them if present.
 4. Do not translate to other languages.
 5. If unclear, write [غير واضح].
@@ -220,7 +278,7 @@ Convert SRT subtitle text from Arabic script to Moroccan Darija written in Latin
 
 STRICT RULES:
 1. Fix errors, split merged words, and convert to natural Darija.
-2. DO NOT MERGE lines or blocks together.
+2. DO NOT MERGE lines or blocks together. Maintain the exact same number of lines and blocks. PRESERVE ALL LINE BREAKS (\n) inside the text blocks.
 3. DO NOT add any punctuation (no periods, commas, or question marks). Strip them if present.
 4. Keep ALL index numbers EXACTLY (e.g. "1", "2")
 5. Keep ALL timestamps EXACTLY (e.g. "00:00:01,500 --> 00:00:03,200")
@@ -242,9 +300,9 @@ STRICT RULES:
 
     // Cleanup files
     Promise.all([
-      unlinkAsync(uploadedFilePath).catch(() => {}),
-      mp3Path ? unlinkAsync(mp3Path).catch(() => {}) : Promise.resolve(),
-      ...chunkFiles.map(f => unlinkAsync(f).catch(() => {}))
+      unlinkAsync(uploadedFilePath).catch(() => { }),
+      mp3Path ? unlinkAsync(mp3Path).catch(() => { }) : Promise.resolve(),
+      ...chunkFiles.map(f => unlinkAsync(f).catch(() => { }))
     ])
 
     return new NextResponse(srtOutput, {
@@ -264,7 +322,7 @@ STRICT RULES:
       for (const f of chunkFiles) {
         if (fs.existsSync(f)) await unlinkAsync(f)
       }
-    } catch (e) {}
+    } catch (e) { }
     return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 })
   }
 }

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { UploadCloud, FileAudio, Loader2, CheckCircle2, Download, ArrowLeft, AlertCircle, Captions, FileText, RefreshCcw, Zap } from 'lucide-react'
+import { UploadCloud, FileAudio, Loader2, CheckCircle2, Download, ArrowLeft, AlertCircle, Captions, FileText, RefreshCcw, Zap, Settings2 } from 'lucide-react'
 import Link from 'next/link'
 import { checkAndDeductTokens, getUserTokens } from '@/app/actions/tokens'
 
@@ -74,6 +74,13 @@ export default function AutoSubtitlePage() {
   const [audioDuration, setAudioDuration] = useState<number>(0)
   const [tokens, setTokens] = useState<number | null>(null)
 
+  // Subtitle Settings
+  const [maxLength, setMaxLength] = useState(42)
+  const [minDuration, setMinDuration] = useState(0)
+  const [gapFrames, setGapFrames] = useState(0)
+  const [maxLines, setMaxLines] = useState<1 | 2>(1)
+  const [showSettings, setShowSettings] = useState(false)
+
   const fileInputRef = useRef<HTMLInputElement>(null)
   const processingInterval = useRef<ReturnType<typeof setInterval> | null>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -101,7 +108,7 @@ export default function AutoSubtitlePage() {
     if (activeSubRef.current) {
       const rect = activeSubRef.current.getBoundingClientRect()
       const windowHeight = window.innerHeight
-      
+
       // Only scroll down if the element is going off the bottom of the screen
       if (rect.bottom > windowHeight - 50) {
         window.scrollBy({
@@ -140,7 +147,7 @@ export default function AutoSubtitlePage() {
     setFile(selectedFile)
     const url = URL.createObjectURL(selectedFile)
     setAudioUrl(url)
-    
+
     // Calculate audio duration
     const audio = new Audio(url)
     audio.addEventListener('loadedmetadata', () => {
@@ -179,6 +186,10 @@ export default function AutoSubtitlePage() {
       const formData = new FormData()
       formData.append('file', file)
       formData.append('language', language)
+      formData.append('maxLength', maxLength.toString())
+      formData.append('minDuration', minDuration.toString())
+      formData.append('gapFrames', gapFrames.toString())
+      formData.append('maxLines', maxLines.toString())
       const response = await fetch('/api/auto-subtitle', { method: 'POST', body: formData })
       if (!response.ok) { const d = await response.json(); throw new Error(d.error || 'Processing failed') }
       const srt = await response.text()
@@ -296,8 +307,8 @@ export default function AutoSubtitlePage() {
                       <p style={{ color: 'var(--muted)', fontSize: '13px', marginBottom: '16px' }}>{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                       {audioDuration > 0 && (
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(245, 158, 11, 0.1)', padding: '6px 12px', borderRadius: '100px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-                           <Zap size={14} fill="#f59e0b" color="#f59e0b" />
-                           <span style={{ color: '#f59e0b', fontSize: '13px', fontWeight: 600 }}>Cost: {Math.ceil(audioDuration * (2000 / 3600))} Tokens</span>
+                          <Zap size={14} fill="#f59e0b" color="#f59e0b" />
+                          <span style={{ color: '#f59e0b', fontSize: '13px', fontWeight: 600 }}>Cost: {Math.ceil(audioDuration * (2000 / 3600))} Tokens</span>
                         </div>
                       )}
                     </motion.div>
@@ -313,8 +324,89 @@ export default function AutoSubtitlePage() {
                 </AnimatePresence>
               </div>
 
+              {/* Subtitle Settings */}
+              <div style={{ marginBottom: '24px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '16px', overflow: 'hidden' }}>
+                <button
+                  onClick={() => setShowSettings(!showSettings)}
+                  style={{ width: '100%', padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'transparent', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '15px', fontWeight: 600 }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Settings2 size={18} color="var(--muted)" /> Subtitle Settings
+                  </div>
+                  <span style={{ color: 'var(--muted)', fontSize: '12px' }}>{showSettings ? 'Hide' : 'Show'}</span>
+                </button>
+
+                <AnimatePresence>
+                  {showSettings && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      style={{ padding: '0 20px 20px', display: 'flex', flexDirection: 'column', gap: '20px' }}
+                    >
+                      {/* Max Length */}
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', color: 'var(--muted)', fontSize: '14px' }}>
+                          <span>Maximum length in characters</span>
+                          <span style={{ color: '#fff' }}>{maxLength}</span>
+                        </div>
+                        <input
+                          type="range" min="7" max="100" value={maxLength} onChange={(e) => setMaxLength(Number(e.target.value))}
+                          style={{ width: '100%', accentColor: '#a855f7' }}
+                        />
+                      </div>
+
+                      {/* Min Duration */}
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', color: 'var(--muted)', fontSize: '14px' }}>
+                          <span>Minimum duration in seconds</span>
+                          <span style={{ color: '#fff' }}>{minDuration.toFixed(1)}</span>
+                        </div>
+                        <input
+                          type="range" min="0" max="10" step="0.1" value={minDuration} onChange={(e) => setMinDuration(Number(e.target.value))}
+                          style={{ width: '100%', accentColor: '#a855f7' }}
+                        />
+                      </div>
+
+                      {/* Gap Frames */}
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', color: 'var(--muted)', fontSize: '14px' }}>
+                          <span>Gap between captions (frames)</span>
+                          <span style={{ color: '#fff' }}>{gapFrames}</span>
+                        </div>
+                        <input
+                          type="range" min="0" max="60" value={gapFrames} onChange={(e) => setGapFrames(Number(e.target.value))}
+                          style={{ width: '100%', accentColor: '#a855f7' }}
+                        />
+                      </div>
+
+                      {/* Lines */}
+                      <div>
+                        <div style={{ marginBottom: '8px', color: 'var(--muted)', fontSize: '14px' }}>Lines</div>
+                        <div style={{ display: 'flex', gap: '16px' }}>
+                          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#fff', fontSize: '14px', cursor: 'pointer' }}>
+                            <input
+                              type="radio" name="lines" value="1" checked={maxLines === 1} onChange={() => setMaxLines(1)}
+                              style={{ accentColor: '#a855f7' }}
+                            />
+                            Single
+                          </label>
+                          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#fff', fontSize: '14px', cursor: 'pointer' }}>
+                            <input
+                              type="radio" name="lines" value="2" checked={maxLines === 2} onChange={() => setMaxLines(2)}
+                              style={{ accentColor: '#a855f7' }}
+                            />
+                            Double
+                          </label>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
               {/* Generate Button */}
-              <button onClick={handleGenerate} disabled={!file || isProcessing || tokens === 0 || tokens === null} style={{ width: '100%', padding: '18px', borderRadius: '14px', border: 'none', background: !file || isProcessing || tokens === 0 || tokens === null ? 'rgba(255,255,255,0.05)' : 'linear-gradient(135deg, #a855f7, #7c3aed)', color: !file || isProcessing || tokens === 0 || tokens === null ? 'var(--muted)' : '#fff', fontSize: '16px', fontWeight: 700, cursor: !file || isProcessing || tokens === 0 || tokens === null ? 'not-allowed' : 'pointer', transition: 'all 0.3s ease', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', boxShadow: !file || isProcessing || tokens === 0 || tokens === null ? 'none' : '0 8px 32px rgba(168,85,247,0.3)' }}>
+              <button onClick={handleGenerate} disabled={!file || isProcessing || tokens === 0 || tokens === null} style={{ width: '100%', padding: '18px', borderRadius: '14px', border: 'none', background: !file || isProcessing || tokens === 0 || tokens === null ? 'rgba(255,255,255,0.05)' : 'linear-gradient(135deg, #ffffff, #d4d4d8)', color: !file || isProcessing || tokens === 0 || tokens === null ? 'var(--muted)' : '#000', fontSize: '16px', fontWeight: 700, cursor: !file || isProcessing || tokens === 0 || tokens === null ? 'not-allowed' : 'pointer', transition: 'all 0.3s ease', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', boxShadow: !file || isProcessing || tokens === 0 || tokens === null ? 'none' : '0 8px 32px rgba(255,255,255,0.15)' }}>
                 {isProcessing ? (<><Loader2 size={20} style={{ animation: 'spin 1s linear infinite' }} />{processingMsg}</>) : (<><Captions size={20} />Generate Subtitles</>)}
               </button>
             </motion.div>
