@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Captions } from 'lucide-react'
+import { Captions, Video } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -12,6 +12,13 @@ const features = [
     description: 'Generate accurate subtitles for any audio or video in Darija (Arabic & Franco), English, French and 90+ languages.',
     color: '#a855f7',
     href: '/tools/auto-subtitle',
+  },
+  {
+    icon: Video,
+    title: 'YouTube Title Optimizer',
+    description: 'Paste your video title and get 3 AI-powered CTR-optimized alternatives designed to boost views and click-through rates.',
+    color: '#ff4444',
+    href: '/tools/title-optimizer',
   },
 ]
 
