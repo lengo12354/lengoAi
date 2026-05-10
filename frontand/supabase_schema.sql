@@ -32,3 +32,29 @@ $$ language plpgsql security definer;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+-- ==========================================
+-- JOBS TABLE (History of processed files)
+-- ==========================================
+create table public.jobs (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  filename text not null,
+  language text,
+  duration text,
+  tokens integer not null,
+  status text not null check (status in ('done', 'failed', 'processing')),
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Enable Row Level Security
+alter table public.jobs enable row level security;
+
+-- Policies for jobs
+create policy "Users can view own jobs" 
+  on jobs for select 
+  using ( auth.uid() = user_id );
+
+create policy "Users can insert own jobs" 
+  on jobs for insert 
+  with check ( auth.uid() = user_id );
