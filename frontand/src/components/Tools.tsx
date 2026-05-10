@@ -69,7 +69,7 @@ export default function Tools() {
             transition={{ duration: 0.6, delay: 0.2 }}
             style={{ fontSize: '18px', color: 'var(--muted)', maxWidth: '520px', margin: '24px auto 0', lineHeight: 1.6 }}
           >
-            From thumbnails to subtitles to viral titles — everything in one place.
+            From thumbnails to subtitles to viral titles, everything in one place.
           </motion.p>
         </div>
 

@@ -30,12 +30,15 @@ const coolveticaIt = localFont({
 })
 
 export const metadata: Metadata = {
-  title: 'lengoAi — AI Auto Subtitles in Darija, French, English & 90+ Languages',
+  title: 'Lengo Ai',
   description:
     'Generate accurate subtitles for any audio or video in Moroccan Darija (Arabic & Franco), French, English and 90+ languages. Export to SRT, VTT, CapCut, Premiere Pro and more in under a minute.',
-  keywords: ['auto subtitles', 'darija subtitles', 'AI transcription', 'subtitle generator', 'SRT export', 'CapCut subtitles', 'Moroccan Arabic', 'Franco subtitles', 'lengoAi'],
+  icons: {
+    icon: '/lengoailogo2.png',
+    apple: '/lengoailogo2.png',
+  },
   openGraph: {
-    title: 'lengoAi — AI Auto Subtitles in Darija, French & 90+ Languages',
+    title: 'Lengo Ai',
     description: 'Generate perfect subtitles for your videos in seconds. Darija, French, English and 90+ more.',
     type: 'website',
   },
