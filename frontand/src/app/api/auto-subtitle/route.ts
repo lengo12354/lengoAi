@@ -6,6 +6,7 @@ import os from 'os'
 import crypto from 'crypto'
 import { promisify } from 'util'
 import Groq from 'groq-sdk'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
 export const maxDuration = 300
 
@@ -243,13 +244,37 @@ export async function POST(req: Request) {
 
       const arabicSrt = wordsToSrt(allWords, srtOptions)
 
+      const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
+      const geminiModel = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+
+      // Split SRT into batches of N blocks to reduce tokens per request
+      function splitSrtBlocks(srt: string, batchSize: number): string[] {
+        const blocks = srt.split(/\n\n+/).filter(b => b.trim())
+        const batches: string[] = []
+        for (let i = 0; i < blocks.length; i += batchSize) {
+          batches.push(blocks.slice(i, i + batchSize).join('\n\n'))
+        }
+        return batches
+      }
+
+      async function processWithGemini(systemPrompt: string, srt: string): Promise<string> {
+        const BATCH_SIZE = 50 // ~50 subtitle blocks per request = much fewer tokens
+        const batches = splitSrtBlocks(srt, BATCH_SIZE)
+        console.log(`[Auto-Subtitle] Processing ${batches.length} batch(es) with Gemini 2.5 Flash...`)
+        const results: string[] = []
+        for (const batch of batches) {
+          const prompt = `${systemPrompt}\n\nSRT INPUT:\n${batch}`
+          const result = await geminiModel.generateContent(prompt)
+          const raw = result.response.text().trim()
+          const cleaned = raw.replace(/^```[\w]*\n?/gm, '').replace(/^```$/gm, '').trim()
+          results.push(cleaned || batch)
+        }
+        return results.join('\n\n')
+      }
+
       if (language === 'darija_ar') {
-        console.log(`[Auto-Subtitle] LLaMA-3 → correcting Darija Arabic...`)
-        const completion = await groq.chat.completions.create({
-          messages: [
-            {
-              role: 'system',
-              content: `You are a Moroccan Darija transcription corrector.
+        console.log(`[Auto-Subtitle] Gemini 2.5 Flash → correcting Darija Arabic...`)
+        const systemPrompt = `You are a Moroccan Darija transcription corrector.
 Fix errors, split merged words, and convert to natural Darija.
 STRICT RULES:
 1. Keep ALL index numbers and timestamps EXACTLY as they are.
@@ -257,25 +282,13 @@ STRICT RULES:
 3. DO NOT add any punctuation (no periods, commas, or question marks). Strip them if present.
 4. Do not translate to other languages.
 5. If unclear, write [غير واضح].
-Return ONLY valid SRT. No markdown.`
-            },
-            { role: 'user', content: arabicSrt }
-          ],
-          model: 'llama-3.3-70b-versatile',
-          temperature: 0.1,
-          max_tokens: 4096,
-        })
-        srtOutput = completion.choices[0]?.message?.content || arabicSrt
+Return ONLY valid SRT. No markdown, no explanation.`
+        srtOutput = await processWithGemini(systemPrompt, arabicSrt)
 
       } else if (language === 'darija_fr') {
-        console.log(`[Auto-Subtitle] LLaMA-3 → correcting and transliterating to Franco...`)
-        const completion = await groq.chat.completions.create({
-          messages: [
-            {
-              role: 'system',
-              content: `You are a Moroccan Darija transliterator and corrector.
+        console.log(`[Auto-Subtitle] Gemini 2.5 Flash → transliterating Darija to Franco...`)
+        const systemPrompt = `You are a Moroccan Darija transliterator and corrector.
 Convert SRT subtitle text from Arabic script to Moroccan Darija written in Latin/Franco script.
-
 STRICT RULES:
 1. Fix errors, split merged words, and convert to natural Darija.
 2. DO NOT MERGE lines or blocks together. Maintain the exact same number of lines and blocks. PRESERVE ALL LINE BREAKS (\n) inside the text blocks.
@@ -287,14 +300,7 @@ STRICT RULES:
 8. Franco rules: ع=3, خ=kh, ش=ch, ح=7, غ=gh, ق=9, ر=r
 9. Examples: "صافي"→"safi", "واش"→"wach", "دابا"→"daba", "آخاي"→"akhay", "ماشي"→"machi", "بزاف"→"bzzaf"
 10. Output ONLY valid SRT. No explanations, no markdown.`
-            },
-            { role: 'user', content: arabicSrt }
-          ],
-          model: 'llama-3.3-70b-versatile',
-          temperature: 0.1,
-          max_tokens: 4096,
-        })
-        srtOutput = completion.choices[0]?.message?.content || arabicSrt
+        srtOutput = await processWithGemini(systemPrompt, arabicSrt)
       }
     }
 

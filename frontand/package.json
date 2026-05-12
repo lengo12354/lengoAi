@@ -11,6 +11,7 @@
   "dependencies": {
     "@danelowe/std-rnnn": "^1.0.6",
     "@deepgram/sdk": "^5.0.0",
+    "@google/generative-ai": "^0.24.1",
     "@gradio/client": "^2.2.0",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.104.1",

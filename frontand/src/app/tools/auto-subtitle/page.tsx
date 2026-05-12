@@ -137,12 +137,12 @@ export default function AutoSubtitlePage() {
   const handleFileSelection = (selectedFile: File) => {
     setError(null); setSrtResult(null); setSubtitles([])
     if (audioUrl) { URL.revokeObjectURL(audioUrl); setAudioUrl(null) }
-    const validExtensions = ['.mp3', '.wav', '.m4a', '.ogg', '.flac', '.aac', '.mp4', '.mov', '.webm', '.mkv']
+    const validExtensions = ['.mp3', '.wav', '.m4a', '.ogg', '.flac', '.aac', '.wma', '.opus']
     if (!validExtensions.some(ext => selectedFile.name.toLowerCase().endsWith(ext))) {
-      setError('Unsupported format. Please upload an audio or video file.'); return
+      setError('Unsupported format. Please upload an audio file (MP3, WAV, M4A, OGG, FLAC, AAC).'); return
     }
-    if (selectedFile.size > 25 * 1024 * 1024) {
-      setError('File size exceeds 25MB limit (Groq API limit).'); return
+    if (selectedFile.size > 200 * 1024 * 1024) {
+      setError('File size exceeds 200MB limit.'); return
     }
     setFile(selectedFile)
     const url = URL.createObjectURL(selectedFile)
@@ -246,7 +246,7 @@ export default function AutoSubtitlePage() {
             </h1>
           </div>
           <p style={{ color: 'var(--muted)', fontSize: '18px', maxWidth: '620px' }}>
-            Generate accurate subtitles from any audio or video. Supports <strong style={{ color: '#3F59E7' }}>Darija</strong>, English, French, and 90+ languages.
+            Generate accurate subtitles from any audio file. Supports <strong style={{ color: '#3F59E7' }}>Darija</strong>, English, French, and 90+ languages.
           </p>
         </div>
 
@@ -296,7 +296,7 @@ export default function AutoSubtitlePage() {
               {/* Upload Zone */}
               <div onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop} onClick={() => !file && fileInputRef.current?.click()}
                 style={{ border: `2px dashed ${isDragging ? '#3F59E7' : file ? 'rgba(63,89,231,0.4)' : 'rgba(255,255,255,0.08)'}`, borderRadius: '20px', padding: '40px 32px', cursor: file ? 'default' : 'pointer', transition: 'all 0.3s ease', background: isDragging ? 'rgba(63,89,231,0.08)' : file ? 'rgba(63,89,231,0.05)' : 'rgba(255,255,255,0.02)', textAlign: 'center', marginBottom: '24px' }}>
-                <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="audio/*,video/*,.mp3,.wav,.m4a,.ogg,.flac,.mp4,.mov,.webm,.mkv" style={{ display: 'none' }} />
+                <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="audio/*,.mp3,.wav,.m4a,.ogg,.flac,.aac,.wma,.opus" style={{ display: 'none' }} />
                 <AnimatePresence mode="wait">
                   {file ? (
                     <motion.div key="file" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
@@ -317,8 +317,8 @@ export default function AutoSubtitlePage() {
                       <div style={{ width: '72px', height: '72px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
                         <UploadCloud size={32} color="var(--muted)" strokeWidth={1.5} />
                       </div>
-                      <h3 style={{ fontSize: '20px', fontWeight: 600, color: '#fff', marginBottom: '8px' }}>Drag & drop audio or video</h3>
-                      <p style={{ color: 'var(--muted)', fontSize: '14px' }}>MP3, WAV, MP4, MOV, MKV... up to 25MB</p>
+                      <h3 style={{ fontSize: '20px', fontWeight: 600, color: '#fff', marginBottom: '8px' }}>Drag &amp; drop your audio file</h3>
+                      <p style={{ color: 'var(--muted)', fontSize: '14px' }}>MP3, WAV, M4A, OGG, FLAC, AAC... up to 200MB</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
