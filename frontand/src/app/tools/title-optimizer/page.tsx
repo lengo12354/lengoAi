@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowLeft, Sparkles, Copy, Check, ChevronDown, ChevronUp,
-  AlertCircle, Loader2, Video, TrendingUp, KeyRound, RefreshCcw, Star, ExternalLink
+  AlertCircle, Loader2, Video, TrendingUp, KeyRound, RefreshCcw, Star, ExternalLink, Zap
 } from 'lucide-react'
 import Link from 'next/link'
+import { generateGeminiContent } from '@/app/actions/gemini'
+import { getUserTokens, deductFixedTokens } from '@/app/actions/tokens'
 
 const SYSTEM_PROMPT = `You are a YouTube CTR optimization expert. 
 IMPORTANT: Detect the exact language/dialect of the user's title (e.g., Moroccan Darija, English, Arabic, French). 
@@ -45,8 +47,6 @@ interface OriginalAnalysis {
 
 export default function TitleOptimizerPage() {
   const [mounted, setMounted] = useState(false)
-  const [apiKey, setApiKey] = useState('')
-  const [showKey, setShowKey] = useState(false)
   const [inputTitle, setInputTitle] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [originalAnalysis, setOriginalAnalysis] = useState<OriginalAnalysis | null>(null)
@@ -55,7 +55,12 @@ export default function TitleOptimizerPage() {
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null)
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null)
 
-  useEffect(() => { setMounted(true) }, [])
+  const [tokens, setTokens] = useState<number | null>(null)
+
+  useEffect(() => { 
+    setMounted(true)
+    getUserTokens().then(bal => setTokens(bal))
+  }, [])
 
   const handleCopy = (text: string, idx: number) => {
     navigator.clipboard.writeText(text)
@@ -65,7 +70,10 @@ export default function TitleOptimizerPage() {
 
   const handleGenerate = async () => {
     if (!inputTitle.trim()) { setError('Please enter a YouTube title.'); return }
-    if (!apiKey.trim()) { setError('Please enter your Gemini API key.'); return }
+    if (tokens !== null && tokens < 50) {
+      setError('Insufficient tokens. You need 50 tokens to optimize a title.')
+      return
+    }
 
     setError(null)
     setResults([])
@@ -76,33 +84,25 @@ export default function TitleOptimizerPage() {
     const userPrompt = `Analyze this YouTube title and give 3 optimized alternatives: "${inputTitle.trim()}"`
 
     try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey.trim()}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-            contents: [{ parts: [{ text: userPrompt }] }],
-            generationConfig: { 
-              temperature: 0.85, 
-              maxOutputTokens: 1500,
-              responseMimeType: "application/json"
-            },
-          }),
-        }
-      )
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}))
-        const msg = err?.error?.message || `API error ${res.status}`
-        throw new Error(msg)
+      // Deduct tokens first
+      const tokenRes = await deductFixedTokens(50)
+      if (!tokenRes.success) {
+        setError(tokenRes.error || 'Failed to deduct tokens.')
+        setIsLoading(false)
+        return
       }
 
-      const data = await res.json()
-      const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || ''
+      if (tokenRes.remainingBalance !== undefined) {
+        setTokens(tokenRes.remainingBalance)
+      }
 
-      if (!raw) throw new Error('Empty response from Gemini.')
+      const generationConfig = { 
+        temperature: 0.85, 
+        maxOutputTokens: 1500,
+        responseMimeType: "application/json"
+      }
+
+      const raw = await generateGeminiContent(SYSTEM_PROMPT, userPrompt, generationConfig)
 
       try {
         const parsed = JSON.parse(raw)
@@ -149,60 +149,24 @@ export default function TitleOptimizerPage() {
               <h1 style={{ fontSize: 'clamp(24px, 5vw, 36px)', fontWeight: 600, letterSpacing: '-1px', color: '#fff', margin: 0 }}>
                 YouTube <span style={{ color: '#FF0000' }}>Optimizer</span>
               </h1>
-              <span style={{ fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '100px', background: 'linear-gradient(90deg, rgba(0,220,100,0.15), rgba(0,220,100,0.05))', color: '#00dc64', border: '1px solid rgba(0,220,100,0.2)', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Sparkles size={12} /> Unlimited Free • 0 Tokens
+              <span style={{ fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '100px', background: 'linear-gradient(90deg, rgba(63,89,231,0.15), rgba(63,89,231,0.05))', color: '#94A2F2', border: '1px solid rgba(63,89,231,0.2)', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Zap size={12} fill="currentColor" /> 50 Tokens per use
               </span>
             </div>
           </div>
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', maxWidth: '580px', lineHeight: 1.6, margin: 0, fontWeight: 400 }}>
-            Paste your video title and get <strong style={{ color: '#fff', fontWeight: 600 }}>3 AI-optimized variants</strong> that maximize CTR. No platform tokens required.
+            Paste your video title and get <strong style={{ color: '#fff', fontWeight: 600 }}>3 AI-optimized variants</strong> that maximize CTR.
           </p>
-        </div>
-
-        {/* API Key Card */}
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px', padding: '24px', marginBottom: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <KeyRound size={16} color="rgba(255,255,255,0.8)" />
-              <span style={{ color: '#fff', fontWeight: 500, fontSize: '14px' }}>Gemini API Key</span>
-              <span style={{ background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: '10px', fontWeight: 600, padding: '3px 8px', borderRadius: '4px', letterSpacing: '0.5px' }}>FREE</span>
+          
+          {tokens !== null && (
+            <div style={{ marginTop: '16px', display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.05)', padding: '6px 12px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '13px', color: 'rgba(255,255,255,0.8)' }}>
+              <Zap size={14} color="#f59e0b" fill="#f59e0b" />
+              Your Balance: <strong style={{ color: '#fff' }}>{tokens.toLocaleString()}</strong> tokens
             </div>
-            <a
-              href="https://aistudio.google.com/app/apikey"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: 'rgba(255,255,255,0.6)', fontSize: '13px', fontWeight: 500, textDecoration: 'none', transition: 'color 0.2s' }}
-              onMouseEnter={e => e.currentTarget.style.color = '#fff'}
-              onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.6)'}
-            >
-              Get free key <ExternalLink size={14} />
-            </a>
-          </div>
-
-          <div style={{ position: 'relative' }}>
-            <input
-              type={showKey ? 'text' : 'password'}
-              value={apiKey}
-              onChange={e => setApiKey(e.target.value)}
-              placeholder="AIza..."
-              style={{
-                width: '100%', padding: '14px 60px 14px 16px', borderRadius: '8px',
-                border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)',
-                color: '#fff', fontSize: '14px', fontFamily: 'monospace', outline: 'none',
-                transition: 'border-color 0.2s', boxSizing: 'border-box',
-              }}
-              onFocus={e => e.target.style.borderColor = 'rgba(255,255,255,0.3)'}
-              onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
-            />
-            <button onClick={() => setShowKey(!showKey)}
-              style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', fontSize: '11px', fontWeight: 600, letterSpacing: '0.5px' }}>
-              {showKey ? 'HIDE' : 'SHOW'}
-            </button>
-          </div>
-          <p style={{ color: 'var(--muted)', fontSize: '12px', marginTop: '8px', margin: '8px 0 0' }}>
-            🔒 Your key stays in your browser only — never sent to our servers.
-          </p>
+          )}
         </div>
+
+
 
         {/* Title Input */}
         <div style={{ marginBottom: '20px' }}>

@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Captions, Video, MonitorPlay } from 'lucide-react'
+import { Captions, Video, MonitorPlay, Clapperboard } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 const features = [
@@ -11,6 +11,13 @@ const features = [
     description: 'Generate accurate subtitles for any audio or video in Darija, English, French and 90+ languages. Export to CapCut, Premiere, DaVinci & more.',
     tag: 'POPULAR',
     href: '/tools/auto-subtitle',
+  },
+  {
+    icon: Clapperboard,
+    title: 'B-Roll Finder',
+    description: 'Paste your voiceover and get 5 cinematic B-roll clips from famous movies & series with timestamps and YouTube search links.',
+    tag: 'POPULAR',
+    href: '/tools/broll-finder',
   },
   {
     icon: Video,
@@ -69,7 +76,7 @@ export default function Tools() {
             transition={{ duration: 0.6, delay: 0.2 }}
             style={{ fontSize: '18px', color: 'var(--muted)', maxWidth: '520px', margin: '24px auto 0', lineHeight: 1.6 }}
           >
-            From thumbnails to subtitles to viral titles, everything in one place.
+            From auto-subtitles to B-roll to viral titles, everything in one place.
           </motion.p>
         </div>
 
@@ -183,7 +190,6 @@ export default function Tools() {
         .tools-cards-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: '24px';
           gap: 24px;
           align-items: stretch;
         }
@@ -256,6 +262,11 @@ export default function Tools() {
         }
 
         @media (max-width: 900px) {
+          .tools-cards-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+        @media (max-width: 600px) {
           .tools-cards-grid {
             grid-template-columns: 1fr !important;
           }

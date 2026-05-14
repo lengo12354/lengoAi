@@ -82,7 +82,7 @@ export default function Hero() {
             margin: '0 auto 48px',
           }}
         >
-          A powerful suite of AI tools built for Graphic Designers, YouTubers, and Video Editors. Generate thumbnails, auto-subtitle videos, optimize titles, and more all in one place.
+          A powerful suite of AI tools built for YouTubers, Video Editors, and Content Creators. Auto-subtitle videos, find cinematic B-roll, preview thumbnails, and optimize your titles all in one place.
         </motion.p>
 
         {/* CTAs */}

@@ -308,7 +308,7 @@ export default function AutoSubtitlePage() {
                       {audioDuration > 0 && (
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(245, 158, 11, 0.1)', padding: '6px 12px', borderRadius: '100px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
                           <Zap size={14} fill="#f59e0b" color="#f59e0b" />
-                          <span style={{ color: '#f59e0b', fontSize: '13px', fontWeight: 600 }}>Cost: {Math.ceil(audioDuration * (2000 / 3600))} Tokens</span>
+                          <span style={{ color: '#f59e0b', fontSize: '13px', fontWeight: 600 }}>Cost: {Math.ceil(audioDuration * (3000 / 3600))} Tokens</span>
                         </div>
                       )}
                     </motion.div>

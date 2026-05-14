@@ -6,7 +6,7 @@ import os from 'os'
 import crypto from 'crypto'
 import { promisify } from 'util'
 import Groq from 'groq-sdk'
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import { generateGeminiContent } from '@/app/actions/gemini'
 
 export const maxDuration = 300
 
@@ -141,8 +141,37 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'File size exceeds 200MB limit' }, { status: 400 })
     }
 
-    if (!process.env.GROQ_API_KEY) {
-      return NextResponse.json({ error: 'GROQ_API_KEY is missing in .env.local' }, { status: 500 })
+    const groqKeysString = process.env.GROQ_API_KEYS || process.env.GROQ_API_KEY
+    if (!groqKeysString) {
+      return NextResponse.json({ error: 'GROQ_API_KEYS are missing in .env.local' }, { status: 500 })
+    }
+    
+    const groqKeys = groqKeysString.split(',').map(k => k.trim()).filter(k => k.length > 0)
+    if (groqKeys.length === 0) {
+      return NextResponse.json({ error: 'No valid GROQ_API_KEYS found.' }, { status: 500 })
+    }
+
+    const shuffledGroqKeys = [...groqKeys].sort(() => Math.random() - 0.5)
+
+    async function transcribeWithGroq(options: any) {
+      let lastError = null
+      for (const key of shuffledGroqKeys) {
+        try {
+          const client = new Groq({ apiKey: key })
+          // Re-create the stream on every attempt since the stream gets consumed
+          const fileStream = fs.createReadStream(options.filePath)
+          const result = await client.audio.transcriptions.create({
+            ...options.params,
+            file: fileStream
+          })
+          return result
+        } catch (e: any) {
+          console.warn(`[Groq Rotation] Key failed, trying next. Error: ${e.message}`)
+          lastError = e
+          continue
+        }
+      }
+      throw new Error(`All Groq keys failed. Last error: ${lastError?.message}`)
     }
 
     const buffer = Buffer.from(await file.arrayBuffer())
@@ -155,7 +184,7 @@ export async function POST(req: Request) {
     const ffmpegExePath = path.join(process.cwd(), 'node_modules', 'ffmpeg-static', os.platform() === 'win32' ? 'ffmpeg.exe' : 'ffmpeg')
     if (!fs.existsSync(ffmpegExePath)) throw new Error(`FFMPEG binary not found`)
 
-    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
+
     let srtOutput = ''
 
     const maxLength = parseInt((formData.get('maxLength') as string) || '42')
@@ -181,11 +210,13 @@ export async function POST(req: Request) {
       })
 
       console.log(`[Auto-Subtitle] Whisper → auto-detect language...`)
-      const result = await groq.audio.transcriptions.create({
-        file: fs.createReadStream(mp3Path),
-        model: 'whisper-large-v3',
-        response_format: 'verbose_json',
-        timestamp_granularities: ['word'],
+      const result = await transcribeWithGroq({
+        filePath: mp3Path,
+        params: {
+          model: 'whisper-large-v3',
+          response_format: 'verbose_json',
+          timestamp_granularities: ['word'],
+        }
       }) as any
       srtOutput = wordsToSrt(result.words || [], srtOptions)
 
@@ -222,14 +253,15 @@ export async function POST(req: Request) {
         const chunkFile = chunkFiles[i]
         const offset = i * 60 // 60 seconds per chunk
 
-        const result = await groq.audio.transcriptions.create({
-          file: fs.createReadStream(chunkFile),
-          model: 'whisper-large-v3',
-          temperature: 0, // Enforce deterministic output
-          // removed language: 'ar' to allow auto-detect as requested
-          prompt: 'واش، داك، دابا، آخاي، صافي، واخا، بغيت، كاين، مزيان، ولا، فاش، كيفاش، ما عرفتش، ماشي، برك، هادشي، لبارح، كاع، بزاف، شوية، راه، علاش، نتيا',
-          response_format: 'verbose_json',
-          timestamp_granularities: ['word'],
+        const result = await transcribeWithGroq({
+          filePath: chunkFile,
+          params: {
+            model: 'whisper-large-v3',
+            temperature: 0,
+            prompt: 'واش، داك، دابا، آخاي، صافي، واخا، بغيت، كاين، مزيان، ولا، فاش، كيفاش، ما عرفتش، ماشي، برك، هادشي، لبارح، كاع، بزاف، شوية، راه، علاش، نتيا',
+            response_format: 'verbose_json',
+            timestamp_granularities: ['word'],
+          }
         }) as any
 
         const words: Word[] = result.words || []
@@ -243,9 +275,6 @@ export async function POST(req: Request) {
       }
 
       const arabicSrt = wordsToSrt(allWords, srtOptions)
-
-      const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
-      const geminiModel = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
 
       // Split SRT into batches of N blocks to reduce tokens per request
       function splitSrtBlocks(srt: string, batchSize: number): string[] {
@@ -264,8 +293,11 @@ export async function POST(req: Request) {
         const results: string[] = []
         for (const batch of batches) {
           const prompt = `${systemPrompt}\n\nSRT INPUT:\n${batch}`
-          const result = await geminiModel.generateContent(prompt)
-          const raw = result.response.text().trim()
+          const raw = await generateGeminiContent(
+            "You are a helpful assistant.", // Minimal system prompt as the main logic is in the user prompt below
+            prompt,
+            { temperature: 0.1, responseMimeType: "text/plain" }
+          )
           const cleaned = raw.replace(/^```[\w]*\n?/gm, '').replace(/^```$/gm, '').trim()
           results.push(cleaned || batch)
         }

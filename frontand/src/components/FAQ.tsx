@@ -8,7 +8,7 @@ const faqs = [
   {
     question: 'Who is lengoAi built for?',
     answer:
-      'lengoAi is designed for Graphic Designers, YouTubers, Video Editors, and Content Creators who want to streamline their workflow, optimize their content, and save hours of manual work.',
+      'lengoAi is designed for YouTubers, Video Editors, and Content Creators who want to streamline their workflow, optimize their content, and save hours of manual work.',
   },
   {
     question: 'Can I use the tools for free?',
