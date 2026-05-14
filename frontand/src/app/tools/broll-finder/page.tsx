@@ -53,8 +53,8 @@ export default function BrollFinderPage() {
 
   const handleGenerate = async () => {
     if (!inputText.trim()) { setError('Please enter a script or voiceover text.'); return }
-    if (tokens !== null && tokens < 100) {
-      setError('Insufficient tokens. You need 100 tokens to find B-Rolls.')
+    if (tokens !== null && tokens < 200) {
+      setError('Insufficient tokens. You need 200 tokens to find B-Rolls.')
       return
     }
 
@@ -67,7 +67,7 @@ export default function BrollFinderPage() {
 
     try {
       // Deduct tokens first
-      const tokenRes = await deductFixedTokens(100)
+      const tokenRes = await deductFixedTokens(200)
       if (!tokenRes.success) {
         setError(tokenRes.error || 'Failed to deduct tokens.')
         setIsLoading(false)
@@ -153,7 +153,7 @@ export default function BrollFinderPage() {
                 B-Roll <span style={{ color: ACCENT }}>Finder</span>
               </h1>
               <span style={{ fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '100px', background: 'linear-gradient(90deg, rgba(63,89,231,0.15), rgba(63,89,231,0.05))', color: '#94A2F2', border: '1px solid rgba(63,89,231,0.2)', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Zap size={12} fill="currentColor" /> 100 Tokens per use
+                <Zap size={12} fill="currentColor" /> 200 Tokens per use
               </span>
             </div>
           </div>
@@ -178,7 +178,7 @@ export default function BrollFinderPage() {
           <textarea
             value={inputText}
             onChange={e => setInputText(e.target.value)}
-            placeholder="e.g. ila bdat l7erb makhasekch trje3 lor, t7rek lqdam dima..."
+            placeholder="e.g., When you finally achieve your goals, you realize the journey was the most important part..."
             rows={4}
             style={{ width: '100%', padding: '16px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.02)', color: '#fff', fontSize: '15px', outline: 'none', resize: 'vertical', fontFamily: 'inherit', lineHeight: 1.5, transition: 'border-color 0.2s, background 0.2s', boxSizing: 'border-box' }}
             onFocus={e => { e.target.style.borderColor = ACCENT_BORDER; e.target.style.background = 'rgba(245,158,11,0.02)' }}

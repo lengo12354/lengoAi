@@ -8,12 +8,12 @@ const faqs = [
   {
     question: 'Who is lengoAi built for?',
     answer:
-      'lengoAi is designed for YouTubers, Video Editors, and Content Creators who want to streamline their workflow, optimize their content, and save hours of manual work.',
+      'lengoAi is designed for Video Editors who want to streamline their workflow, edit faster, and save hours of manual work.',
   },
   {
     question: 'Can I use the tools for free?',
     answer:
-      'Yes! We offer a free Starter plan that gives you limited access to all our tools, including thumbnail mockups and auto-subtitles, so you can test the quality before upgrading.',
+      'Yes! We offer a free Starter plan that gives you limited access to all our tools, including viral script generation and auto-subtitles, so you can test the quality before upgrading.',
   },
   {
     question: 'What languages are supported for Auto-Subtitles?',
@@ -21,25 +21,16 @@ const faqs = [
       'We support 90+ languages including Moroccan Darija (Arabic script and Franco/Latin), English, French, Spanish, Arabic, and many more. Language is detected automatically.',
   },
   {
-    question: 'What platforms is the Thumbnail Preview tool designed for?',
+    question: 'Where do the B-roll suggestions come from?',
     answer:
-      'Currently, it perfectly simulates the YouTube interface (both desktop and mobile formats) so you can ensure your thumbnails are high-converting before you hit publish.',
+      'Our AI analyzes your script and suggests cinematic B-roll clips from famous movies, TV shows, and pop culture that you can easily find and download from YouTube.',
   },
   {
     question: 'What export formats are available for subtitles?',
     answer:
       'You can export as SRT, VTT, plain text, CapCut JSON, Premiere Pro XML, DaVinci Resolve SRT, and Final Cut Pro FCPXML. All exports include word-level timestamps on Pro.',
   },
-  {
-    question: 'Is my data private and secure?',
-    answer:
-      'All uploaded files are processed in isolated encrypted environments and permanently deleted within 24 hours. We are GDPR-compliant and never use your content to train our models.',
-  },
-  {
-    question: 'Can I cancel my subscription at any time?',
-    answer:
-      'Absolutely no contracts or lock-ins. Cancel from your account settings at any time and keep access until the end of your billing period.',
-  },
+
 ]
 
 function FAQItem({ faq, index }: { faq: typeof faqs[0]; index: number }) {
@@ -132,7 +123,7 @@ export default function FAQ() {
             Frequently asked questions
           </h2>
           <p style={{ fontSize: '18px', color: 'var(--muted)', maxWidth: '520px', margin: '20px auto 0', lineHeight: 1.6 }}>
-            Everything you need to know about the lengoAi Creator Suite.
+            Everything you need to know about the lengoAi Editor Suite.
           </p>
         </motion.div>
 

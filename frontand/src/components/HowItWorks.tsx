@@ -8,17 +8,17 @@ const steps = [
   {
     icon: MousePointerClick,
     title: 'Choose Your Tool',
-    description: 'Select from our suite of creator tools. Whether you need auto-subtitles, a YouTube title optimizer, or a thumbnail preview, we have you covered.',
+    description: 'Select from our suite of editing tools. Whether you need auto-subtitles, cinematic B-roll, or a viral script, we have you covered.',
   },
   {
     icon: Cpu,
     title: 'Let AI Do The Work',
-    description: 'Our advanced AI models analyze your content, generate high-converting alternatives, or accurately transcribe your audio in seconds.',
+    description: 'Our advanced AI models analyze your video script, suggest cinematic shots, or accurately transcribe your audio in seconds.',
   },
   {
     icon: Download,
     title: 'Export & Publish',
-    description: 'Download your optimized assets, copy high-CTR titles, or export subtitles directly to your favorite editing software with one click.',
+    description: 'Download your optimized assets, copy high-retention scripts, or export subtitles directly to your favorite editing software with one click.',
   },
 ]
 

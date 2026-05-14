@@ -65,8 +65,8 @@ export default function Hero() {
             textShadow: '0 10px 40px rgba(0,0,0,0.5)',
           }}
         >
-          Focus on creating.<br />
-          <span className="gradient-text-accent">Let AI <span style={{ fontFamily: 'var(--font-coolvetica-it)', fontSize: '1.15em', fontWeight: 400, letterSpacing: '0' }}>do the rest.</span></span>
+          Speed up your workflow.<br />
+          <span className="gradient-text-accent">Let AI <span style={{ fontFamily: 'var(--font-coolvetica-it)', fontSize: '1.15em', fontWeight: 400, letterSpacing: '0' }}>handle the rest.</span></span>
         </motion.h1>
 
         {/* Subhead */}
@@ -82,7 +82,7 @@ export default function Hero() {
             margin: '0 auto 48px',
           }}
         >
-          A powerful suite of AI tools built for YouTubers, Video Editors, and Content Creators. Auto-subtitle videos, find cinematic B-roll, preview thumbnails, and optimize your titles all in one place.
+          A powerful suite of AI tools built specifically for Video Editors. Auto-subtitle videos, find cinematic B-roll, and generate viral scripts in record time.
         </motion.p>
 
         {/* CTAs */}

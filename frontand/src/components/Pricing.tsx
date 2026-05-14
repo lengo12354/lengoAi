@@ -19,10 +19,10 @@ const plans: Plan[] = [
     name: 'Starter',
     price: 10,
     tokens: '4,000 Tokens',
-    description: 'Perfect for occasional projects and testing the waters.',
+    description: 'Perfect for freelance editors and occasional projects.',
     icon: Star,
     features: [
-      'Access to all creator tools',
+      'Access to all editor tools',
       'Standard generation speed',
       'Standard output quality',
       'Email support',
@@ -31,19 +31,19 @@ const plans: Plan[] = [
     featured: false,
   },
   {
-    name: 'Creator',
+    name: 'Pro Editor',
     price: 20,
     tokens: '10,000 Tokens',
-    description: 'Best value for active creators and regular uploaders.',
+    description: 'Best value for full-time video editors.',
     icon: Sparkles,
     features: [
-      'Access to all creator tools',
+      'Access to all editor tools',
       'Priority generation speed',
       'Premium output quality',
       'Early access to new tools',
       '24/7 Priority support',
     ],
-    cta: 'Get Creator Pack',
+    cta: 'Get Editor Pack',
     featured: true,
   },
   {
@@ -53,7 +53,7 @@ const plans: Plan[] = [
     description: 'For heavy users, teams, and professional agencies.',
     icon: Zap,
     features: [
-      'Access to all creator tools',
+      'Access to all editor tools',
       'Highest generation priority',
       'Maximum output quality',
       'Custom workflows support',
@@ -266,7 +266,7 @@ function PlanContent({ plan, isFeatured, Icon }: { plan: Plan; isFeatured: boole
       </div>
 
       <a
-        href={`https://wa.me/212679635087?text=${encodeURIComponent(`Salam, bghit nchri l'${plan.name} Pack ($${plan.price} l ${plan.tokens}) dyal lengoAi Creator Suite. Achno ndir?`)}`}
+        href={`https://wa.me/212679635087?text=${encodeURIComponent(`Salam, bghit nchri l'${plan.name} Pack ($${plan.price} l ${plan.tokens}) dyal lengoAi Editor Suite. Achno ndir?`)}`}
         target="_blank"
         rel="noopener noreferrer"
         className={isFeatured ? 'btn-banger' : 'btn-ghost-banger'}

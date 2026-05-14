@@ -63,7 +63,7 @@ export default function CTABanner() {
               marginBottom: '24px',
             }}
           >
-            Your best content.<br />
+            Your best edit.<br />
             <span style={{ fontFamily: 'var(--font-coolvetica-it)' }}>Ready in minutes.</span>
           </h2>
           <p
@@ -75,7 +75,7 @@ export default function CTABanner() {
               margin: '0 auto 48px'
             }}
           >
-            Join thousands of creators who use lengoAi to design, edit, and optimize their workflow.
+            Join thousands of video editors who use lengoAi to automate their workflow and save hours of manual editing.
           </p>
           <a
             href="#tools"

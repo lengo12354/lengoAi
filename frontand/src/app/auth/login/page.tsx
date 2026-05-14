@@ -1,13 +1,22 @@
-﻿'use client'
+'use client'
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Captions, Mail, Loader2, Lock, ArrowRight, ShieldCheck } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { initUserProfile } from '@/app/actions/tokens'
 
 type Mode = 'login' | 'signup'
 type SignupStep = 'email' | 'verify' | 'password'
+
+// Only allow specific email providers for signup
+const ALLOWED_DOMAINS = ['gmail.com', 'outlook.com']
+
+function isAllowedDomain(email: string): boolean {
+  const domain = email.split('@')[1]?.toLowerCase()
+  return ALLOWED_DOMAINS.includes(domain)
+}
 
 export default function AuthPage() {
   const router = useRouter()
@@ -50,10 +59,20 @@ export default function AuthPage() {
     setLoading(true)
     setMessage(null)
 
+    // Only allow gmail.com addresses
+    if (!isAllowedDomain(email)) {
+      setMessage({
+        type: 'error',
+        text: 'Only Gmail addresses (@gmail.com) are accepted for sign up.'
+      })
+      setLoading(false)
+      return
+    }
+
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        shouldCreateUser: true, // Create the user if they don't exist
+        shouldCreateUser: true,
       }
     })
 
@@ -103,6 +122,8 @@ export default function AuthPage() {
       setMessage({ type: 'error', text: error.message })
       setLoading(false)
     } else {
+      // Create profile with 300 free tokens for new user
+      await initUserProfile()
       router.push('/')
       router.refresh()
     }

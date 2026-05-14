@@ -1,143 +1,125 @@
 'use client'
 
-import { Rocket } from 'lucide-react'
-
-const footerLinks = {
-  Product: ['Overview', 'Features', 'Pricing', 'Changelog', 'Roadmap'],
-  Tool: ['YouTube Thumbnail Preview', 'Auto Subtitles', 'Title Optimizer', 'API Reference'],
-  Company: ['About', 'Blog', 'Careers', 'Brand Assets', 'Contact'],
-  Legal: ['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'Security'],
-}
-
 export default function Footer() {
   return (
     <footer
       style={{
-        background: 'var(--background)',
-        borderTop: '1px solid rgba(255,255,255,0.05)',
-        paddingTop: '80px',
-        paddingBottom: '40px',
         position: 'relative',
         zIndex: 2,
+        marginTop: '80px',
       }}
     >
-      <div className="container-xl">
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '2fr repeat(4, 1fr)',
-            gap: '48px',
-            marginBottom: '80px',
-          }}
-          className="footer-grid"
-        >
-          {/* Brand */}
-          <div style={{ paddingRight: '40px' }}>
-            <a
-              href="/"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '10px',
-                textDecoration: 'none',
-                color: 'var(--foreground)',
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 700,
-                fontSize: '20px',
-                marginBottom: '20px',
-              }}
-            >
-              <img
-                src="/lengoailogo.png"
-                alt="lengoAi Logo"
-                style={{ height: '44px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }}
-              />
-            </a>
-            <p style={{ fontSize: '15px', color: 'var(--muted)', lineHeight: 1.6 }}>
-              The ultimate AI toolkit for creators. Generate thumbnails, auto-subtitle videos in 90+ languages, and optimize your content for maximum reach.
-            </p>
-          </div>
+      {/* Decorative top border glow */}
+      <div style={{ height: '1px', width: '100%', background: 'linear-gradient(90deg, transparent, rgba(63,89,231,0.5), transparent)' }} />
+      
+      <div 
+        style={{
+          background: 'rgba(5, 5, 10, 0.4)',
+          backdropFilter: 'blur(20px)',
+          paddingTop: '60px',
+          paddingBottom: '40px',
+        }}
+      >
+        <div className="container-xl">
+          <div 
+            style={{ 
+              display: 'flex', 
+              flexWrap: 'wrap', 
+              justifyContent: 'space-between', 
+              gap: '48px',
+              marginBottom: '48px'
+            }}
+          >
+            {/* Left - Brand */}
+            <div style={{ maxWidth: '320px' }}>
+              <a href="/" style={{ display: 'inline-flex', marginBottom: '20px' }}>
+                <img
+                  src="/lengoailogo.png"
+                  alt="lengoAi Logo"
+                  style={{ height: '36px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }}
+                />
+              </a>
+              <p style={{ color: 'var(--muted)', fontSize: '15px', lineHeight: 1.6, marginBottom: '24px' }}>
+                The ultimate AI toolkit designed specifically to help video editors streamline their workflow and save hours of manual editing.
+              </p>
+              
+              {/* Social Links (Text) */}
+              <div style={{ display: 'flex', gap: '16px' }}>
+                {[
+                  { name: 'Twitter', href: '#' },
+                  { name: 'YouTube', href: '#' },
+                  { name: 'Discord', href: '#' },
+                ].map((social, i) => (
+                  <a
+                    key={i}
+                    href={social.href}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '100px',
+                      background: 'rgba(255,255,255,0.03)',
+                      border: '1px solid rgba(255,255,255,0.05)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'var(--muted)',
+                      fontSize: '13px',
+                      fontWeight: 500,
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(63,89,231,0.1)'
+                      e.currentTarget.style.color = '#fff'
+                      e.currentTarget.style.borderColor = 'rgba(63,89,231,0.3)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(255,255,255,0.03)'
+                      e.currentTarget.style.color = 'var(--muted)'
+                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'
+                    }}
+                  >
+                    {social.name}
+                  </a>
+                ))}
+              </div>
+            </div>
 
-          {/* Link columns */}
-          {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
-              <h4
-                style={{
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  fontFamily: 'var(--font-heading)',
-                  color: 'var(--foreground)',
-                  marginBottom: '24px',
-                }}
-              >
-                {category}
-              </h4>
-              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      style={{
-                        color: 'var(--muted)',
-                        textDecoration: 'none',
-                        fontSize: '14px',
-                        transition: 'color 0.2s ease',
-                      }}
-                      onMouseEnter={(e) => ((e.target as HTMLElement).style.color = '#fff')}
-                      onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'var(--muted)')}
-                    >
+            {/* Right - Links */}
+            <div style={{ display: 'flex', gap: '64px', flexWrap: 'wrap' }}>
+              <div>
+                <h4 style={{ color: '#fff', fontSize: '14px', fontWeight: 600, marginBottom: '20px', fontFamily: 'var(--font-heading)' }}>Platform</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {['Tools', 'Pricing', 'How it Works'].map(link => (
+                    <a key={link} href={`#${link.toLowerCase().replace(/ /g, '-')}`} style={{ color: 'var(--muted)', fontSize: '14px', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = '#fff'} onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}>
                       {link}
                     </a>
-                  </li>
-                ))}
-              </ul>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h4 style={{ color: '#fff', fontSize: '14px', fontWeight: 600, marginBottom: '20px', fontFamily: 'var(--font-heading)' }}>Legal</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {['Privacy Policy', 'Terms of Service', 'Contact Us'].map(link => (
+                    <a key={link} href="#" style={{ color: 'var(--muted)', fontSize: '14px', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = '#fff'} onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}>
+                      {link}
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
-
-        {/* Bottom bar */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingTop: '32px',
-            borderTop: '1px solid rgba(255,255,255,0.05)',
-            flexWrap: 'wrap',
-            gap: '16px',
-            color: 'var(--muted)',
-            fontSize: '13px',
-          }}
-        >
-          <div style={{ display: 'flex', gap: '24px' }}>
-            <span>© {new Date().getFullYear()} lengoAi Inc.</span>
-            <span>All systems operational.</span>
           </div>
-          <div style={{ display: 'flex', gap: '16px' }}>
-            {['Twitter', 'GitHub', 'Discord', 'YouTube'].map((s) => (
-              <a
-                key={s}
-                href="#"
-                style={{ color: 'inherit', textDecoration: 'none' }}
-                onMouseEnter={(e) => ((e.target as HTMLElement).style.color = '#fff')}
-                onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'var(--muted)')}
-              >
-                {s}
-              </a>
-            ))}
+
+          {/* Bottom Bar */}
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', margin: 0 }}>
+              © {new Date().getFullYear()} lengoAi Inc. All rights reserved.
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 10px rgba(16, 185, 129, 0.5)' }} />
+              <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', fontWeight: 500 }}>All systems operational</span>
+            </div>
           </div>
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 1024px) {
-          .footer-grid { grid-template-columns: 1fr 1fr 1fr !important; }
-          .footer-grid > div:first-child { grid-column: 1 / -1; margin-bottom: 24px; }
-        }
-        @media (max-width: 640px) {
-          .footer-grid { grid-template-columns: 1fr 1fr !important; }
-        }
-      `}</style>
     </footer>
   )
 }

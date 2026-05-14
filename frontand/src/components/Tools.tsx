@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Captions, Video, MonitorPlay, Clapperboard } from 'lucide-react'
+import { Captions, Clapperboard, ScrollText } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 const features = [
@@ -19,19 +19,13 @@ const features = [
     tag: 'POPULAR',
     href: '/tools/broll-finder',
   },
+
   {
-    icon: Video,
-    title: 'YouTube Title Optimizer',
-    description: 'Paste your video title and get 3 AI-powered CTR-optimized alternatives designed to boost views and click-through rates.',
-    tag: 'HOT',
-    href: '/tools/title-optimizer',
-  },
-  {
-    icon: MonitorPlay,
-    title: 'Thumbnail Preview',
-    description: 'Mockup your YouTube thumbnails in a realistic channel layout before uploading. See exactly how they look to your viewers.',
+    icon: ScrollText,
+    title: 'Viral Script Generator',
+    description: 'Enter your topic and get a complete, highly-engaging short-form video script with a viral hook, visual cues, and a CTA.',
     tag: 'NEW',
-    href: '/tools/thumbnail-preview',
+    href: '/tools/viral-script',
   },
 ]
 
@@ -47,7 +41,7 @@ export default function Tools() {
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '72px' }}>
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
-            <span className="section-badge">Creator Suite</span>
+            <span className="section-badge">Editor Suite</span>
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -66,7 +60,7 @@ export default function Tools() {
           >
             One suite.<br />
             <span style={{ background: 'linear-gradient(135deg, #3F59E7 0%, #94A2F2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Every tool you need.
+              Every tool an editor needs.
             </span>
           </motion.h2>
           <motion.p
@@ -76,7 +70,7 @@ export default function Tools() {
             transition={{ duration: 0.6, delay: 0.2 }}
             style={{ fontSize: '18px', color: 'var(--muted)', maxWidth: '520px', margin: '24px auto 0', lineHeight: 1.6 }}
           >
-            From auto-subtitles to B-roll to viral titles, everything in one place.
+            From auto-subtitles to B-roll to viral scripts, everything in one place.
           </motion.p>
         </div>
 

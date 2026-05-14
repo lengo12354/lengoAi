@@ -107,3 +107,29 @@ export async function deductFixedTokens(amount: number) {
 
   return { success: true, tokensDeducted: amount, remainingBalance: newBalance }
 }
+
+// Called after signup to create profile with 300 free tokens if not already exists
+export async function initUserProfile() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { success: false }
+
+  // Check if profile already exists
+  const { data: existing } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('id', user.id)
+    .single()
+
+  if (existing) return { success: true, alreadyExists: true }
+
+  // Create new profile with 300 free tokens
+  const { error } = await supabase
+    .from('profiles')
+    .insert({ id: user.id, tokens_balance: 300 })
+
+  if (error) return { success: false, error: error.message }
+
+  return { success: true, alreadyExists: false }
+}
