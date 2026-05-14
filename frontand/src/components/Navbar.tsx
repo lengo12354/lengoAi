@@ -116,8 +116,8 @@ export default function Navbar() {
           >
             <img
               src="/lengoailogo.png"
-              alt="lengoAi Logo"
-              style={{ height: '44px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }}
+              alt="Awartools Logo"
+              style={{ height: '28px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }}
             />
           </a>
 

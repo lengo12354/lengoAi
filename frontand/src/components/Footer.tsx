@@ -35,7 +35,7 @@ export default function Footer() {
               <a href="/" style={{ display: 'inline-flex', marginBottom: '20px' }}>
                 <img
                   src="/lengoailogo.png"
-                  alt="lengoAi Logo"
+                  alt="Awartools Logo"
                   style={{ height: '36px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }}
                 />
               </a>
@@ -111,12 +111,9 @@ export default function Footer() {
           {/* Bottom Bar */}
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
             <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', margin: 0 }}>
-              © {new Date().getFullYear()} lengoAi Inc. All rights reserved.
+              © {new Date().getFullYear()} Awartools. All rights reserved.
             </p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 10px rgba(16, 185, 129, 0.5)' }} />
-              <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', fontWeight: 500 }}>All systems operational</span>
-            </div>
+
           </div>
         </div>
       </div>

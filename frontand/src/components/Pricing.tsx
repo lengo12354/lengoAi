@@ -266,7 +266,7 @@ function PlanContent({ plan, isFeatured, Icon }: { plan: Plan; isFeatured: boole
       </div>
 
       <a
-        href={`https://wa.me/212679635087?text=${encodeURIComponent(`Salam, bghit nchri l'${plan.name} Pack ($${plan.price} l ${plan.tokens}) dyal lengoAi Editor Suite. Achno ndir?`)}`}
+        href={`https://wa.me/212679635087?text=${encodeURIComponent(`Salam, bghit nchri l'${plan.name} Pack ($${plan.price} l ${plan.tokens}) dyal Awartools Editor Suite. Achno ndir?`)}`}
         target="_blank"
         rel="noopener noreferrer"
         className={isFeatured ? 'btn-banger' : 'btn-ghost-banger'}

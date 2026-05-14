@@ -30,7 +30,7 @@ const coolveticaIt = localFont({
 })
 
 export const metadata: Metadata = {
-  title: 'Lengo Ai',
+  title: 'Awartools',
   description:
     'Generate accurate subtitles for any audio or video in Moroccan Darija (Arabic & Franco), French, English and 90+ languages. Export to SRT, VTT, CapCut, Premiere Pro and more in under a minute.',
   icons: {
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     apple: '/lengoailogo2.png',
   },
   openGraph: {
-    title: 'Lengo Ai',
+    title: 'Awartools',
     description: 'Generate perfect subtitles for your videos in seconds. Darija, French, English and 90+ more.',
     type: 'website',
   },

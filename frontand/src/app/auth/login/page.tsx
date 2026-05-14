@@ -48,7 +48,6 @@ export default function AuthPage() {
       setLoading(false)
     } else {
       router.push('/')
-      router.refresh()
     }
   }
 
@@ -122,10 +121,15 @@ export default function AuthPage() {
       setMessage({ type: 'error', text: error.message })
       setLoading(false)
     } else {
-      // Create profile with 300 free tokens for new user
-      await initUserProfile()
-      router.push('/')
-      router.refresh()
+      try {
+        // Create profile with 300 free tokens for new user
+        await initUserProfile()
+      } catch (err: any) {
+        console.error("Profile initialization error:", err)
+      } finally {
+        setLoading(false)
+        router.push('/')
+      }
     }
   }
 
@@ -183,7 +187,7 @@ export default function AuthPage() {
           </h1>
           <p style={{ color: 'var(--muted)', textAlign: 'center', marginBottom: '24px', fontSize: '15px' }}>
             {mode === 'login' 
-              ? 'Sign in to your lengoAi account.'
+              ? 'Sign in to your Awartools account.'
               : signupStep === 'email' ? 'Enter your email to get started.'
               : signupStep === 'verify' ? 'Enter the 8-digit code we sent you.'
               : 'Choose a strong password for your account.'

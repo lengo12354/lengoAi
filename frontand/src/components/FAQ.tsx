@@ -6,9 +6,9 @@ import { ChevronDown } from 'lucide-react'
 
 const faqs = [
   {
-    question: 'Who is lengoAi built for?',
+    question: 'Who is Awartools built for?',
     answer:
-      'lengoAi is designed for Video Editors who want to streamline their workflow, edit faster, and save hours of manual work.',
+      'Awartools is designed for Video Editors who want to streamline their workflow, edit faster, and save hours of manual work.',
   },
   {
     question: 'Can I use the tools for free?',
@@ -123,7 +123,7 @@ export default function FAQ() {
             Frequently asked questions
           </h2>
           <p style={{ fontSize: '18px', color: 'var(--muted)', maxWidth: '520px', margin: '20px auto 0', lineHeight: 1.6 }}>
-            Everything you need to know about the lengoAi Editor Suite.
+            Everything you need to know about the Awartools Editor Suite.
           </p>
         </motion.div>
 

@@ -75,7 +75,7 @@ export default function CTABanner() {
               margin: '0 auto 48px'
             }}
           >
-            Join thousands of video editors who use lengoAi to automate their workflow and save hours of manual editing.
+            Join thousands of video editors who use Awartools to automate their workflow and save hours of manual editing.
           </p>
           <a
             href="#tools"
