@@ -1,10 +1,18 @@
 'use server'
 
+import { createClient } from '@/lib/supabase/server'
+
 export async function generateGeminiContent(
   systemPrompt: string,
   userPrompt: string,
   generationConfig: any
 ) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    throw new Error('Unauthorized. Please log in.')
+  }
+
   // Read either GEMINI_API_KEYS (comma separated) or GEMINI_API_KEY (single)
   const keysString = process.env.GEMINI_API_KEYS || process.env.GEMINI_API_KEY
   

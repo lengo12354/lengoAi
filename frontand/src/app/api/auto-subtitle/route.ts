@@ -123,7 +123,15 @@ function wordsToSrt(words: Word[], options: { maxLength: number, minDuration: nu
     .join('\n\n')
 }
 
+import { createClient } from '@/lib/supabase/server'
+
 export async function POST(req: Request) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized. Please log in.' }, { status: 401 })
+  }
+
   let uploadedFilePath = ''
   let mp3Path = ''
   let chunkFiles: string[] = []
@@ -139,6 +147,10 @@ export async function POST(req: Request) {
 
     if (file.size > 200 * 1024 * 1024) {
       return NextResponse.json({ error: 'File size exceeds 200MB limit' }, { status: 400 })
+    }
+
+    if (!file.type.startsWith('audio/') && !file.type.startsWith('video/')) {
+      return NextResponse.json({ error: 'Invalid file type. Only audio or video files are allowed.' }, { status: 400 })
     }
 
     const groqKeysString = process.env.GROQ_API_KEYS || process.env.GROQ_API_KEY
@@ -314,6 +326,7 @@ STRICT RULES:
 3. DO NOT add any punctuation (no periods, commas, or question marks). Strip them if present.
 4. Do not translate to other languages.
 5. If unclear, write [غير واضح].
+6. IMPORTANT: If the speaker uses an English or French word (e.g., "AI", "why", "PC"), write it in its original Latin letters (like "AI" or "why") instead of writing it with Arabic letters (like "اي ااي" or "واي").
 Return ONLY valid SRT. No markdown, no explanation.`
         srtOutput = await processWithGemini(systemPrompt, arabicSrt)
 
@@ -331,7 +344,8 @@ STRICT RULES:
 7. Do NOT translate to French or English — write how Moroccans pronounce it in Latin letters
 8. Franco rules: ع=3, خ=kh, ش=ch, ح=7, غ=gh, ق=9, ر=r
 9. Examples: "صافي"→"safi", "واش"→"wach", "دابا"→"daba", "آخاي"→"akhay", "ماشي"→"machi", "بزاف"→"bzzaf"
-10. Output ONLY valid SRT. No explanations, no markdown.`
+10. IMPORTANT: If the speaker uses an English or French word, spell it correctly in its original language (e.g., "AI", "why") rather than writing the Franco transliteration.
+11. Output ONLY valid SRT. No explanations, no markdown.`
         srtOutput = await processWithGemini(systemPrompt, arabicSrt)
       }
     }

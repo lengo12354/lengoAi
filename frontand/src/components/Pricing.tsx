@@ -49,7 +49,7 @@ const plans: Plan[] = [
   {
     name: 'Agency',
     price: 50,
-    tokens: 'Unlimited Tokens',
+    tokens: '60,000 Tokens',
     description: 'For heavy users, teams, and professional agencies.',
     icon: Zap,
     features: [
@@ -266,7 +266,7 @@ function PlanContent({ plan, isFeatured, Icon }: { plan: Plan; isFeatured: boole
       </div>
 
       <a
-        href={`https://wa.me/212679635087?text=${encodeURIComponent(`Salam, bghit nchri l'${plan.name} Pack ($${plan.price} l ${plan.tokens}) dyal Awartools Editor Suite. Achno ndir?`)}`}
+        href={`https://wa.me/212614622725?text=${encodeURIComponent(`Hi, I'm looking to upgrade to the ${plan.name} plan ($${plan.price}). How can I do the payment?`)}`}
         target="_blank"
         rel="noopener noreferrer"
         className={isFeatured ? 'btn-banger' : 'btn-ghost-banger'}

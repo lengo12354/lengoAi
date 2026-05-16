@@ -256,13 +256,23 @@ export default function AutoSubtitlePage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#f59e0b' }}>
               <Zap size={24} fill="#f59e0b" strokeWidth={1} />
               <div>
-                <span style={{ fontWeight: 700, display: 'block', fontSize: '16px' }}>{tokens === null ? 'You need tokens to continue!' : 'You are out of tokens!'}</span>
-                <span style={{ fontSize: '13px', opacity: 0.8 }}>Please buy tokens to start generating subtitles.</span>
+                <span style={{ fontWeight: 700, display: 'block', fontSize: '16px' }}>{tokens === null ? 'You need to be logged in!' : 'You are out of tokens!'}</span>
+                <span style={{ fontSize: '13px', opacity: 0.8 }}>{tokens === null ? 'Please log in to use this tool.' : 'Please buy tokens to start generating subtitles.'}</span>
               </div>
             </div>
-            <a href="/#pricing" className="btn-banger" style={{ padding: '10px 20px', fontSize: '14px', whiteSpace: 'nowrap' }}>
-              Buy Tokens
-            </a>
+            {tokens === null ? (
+              <a href="/auth/login" style={{ background: '#f59e0b', color: '#080C2A', fontWeight: 700, padding: '10px 20px', fontSize: '14px', borderRadius: '100px', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(245,158,11,0.3)' }}
+                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.background = '#FBBF24' }}
+                 onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = '#f59e0b' }}>
+                Log In
+              </a>
+            ) : (
+              <a href="/#pricing" style={{ background: '#f59e0b', color: '#080C2A', fontWeight: 700, padding: '10px 20px', fontSize: '14px', borderRadius: '100px', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(245,158,11,0.3)' }}
+                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.background = '#FBBF24' }}
+                 onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = '#f59e0b' }}>
+                Buy Tokens
+              </a>
+            )}
           </div>
         )}
 

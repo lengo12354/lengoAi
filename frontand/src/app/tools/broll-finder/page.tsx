@@ -169,6 +169,32 @@ export default function BrollFinderPage() {
           )}
         </div>
 
+        {/* Tokens Alert */}
+        {(tokens === null || tokens < 200) && (
+          <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', padding: '16px 24px', borderRadius: '16px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#f59e0b' }}>
+              <Zap size={24} fill="#f59e0b" strokeWidth={1} />
+              <div>
+                <span style={{ fontWeight: 700, display: 'block', fontSize: '16px' }}>{tokens === null ? 'You need to be logged in!' : 'Insufficient tokens!'}</span>
+                <span style={{ fontSize: '13px', opacity: 0.8 }}>{tokens === null ? 'Please log in to use this tool.' : 'You need at least 200 tokens to find B-Rolls.'}</span>
+              </div>
+            </div>
+            {tokens === null ? (
+              <a href="/auth/login" style={{ background: '#f59e0b', color: '#080C2A', fontWeight: 700, padding: '10px 20px', fontSize: '14px', borderRadius: '100px', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(245,158,11,0.3)' }}
+                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.background = '#FBBF24' }}
+                 onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = '#f59e0b' }}>
+                Log In
+              </a>
+            ) : (
+              <a href="/#pricing" style={{ background: '#f59e0b', color: '#080C2A', fontWeight: 700, padding: '10px 20px', fontSize: '14px', borderRadius: '100px', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(245,158,11,0.3)' }}
+                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.background = '#FBBF24' }}
+                 onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = '#f59e0b' }}>
+                Buy Tokens
+              </a>
+            )}
+          </div>
+        )}
+
 
         {/* Text Input */}
         <div style={{ marginBottom: '20px' }}>
@@ -205,10 +231,10 @@ export default function BrollFinderPage() {
         {/* Generate Button */}
         <button
           onClick={handleGenerate}
-          disabled={isLoading}
-          style={{ width: '100%', padding: '16px', borderRadius: '8px', border: '1px solid transparent', background: isLoading ? 'rgba(255,255,255,0.05)' : ACCENT, color: isLoading ? 'rgba(255,255,255,0.5)' : '#080C2A', fontSize: '15px', fontWeight: 600, cursor: isLoading ? 'not-allowed' : 'pointer', transition: 'all 0.2s ease', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', boxShadow: isLoading ? 'none' : '0 4px 14px rgba(245,158,11,0.3)', marginBottom: '40px' }}
-          onMouseEnter={e => { if (!isLoading) { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.background = '#FBBF24' } }}
-          onMouseLeave={e => { if (!isLoading) { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = ACCENT } }}
+          disabled={isLoading || tokens === null || tokens < 200}
+          style={{ width: '100%', padding: '16px', borderRadius: '8px', border: '1px solid transparent', background: isLoading || tokens === null || tokens < 200 ? 'rgba(255,255,255,0.05)' : ACCENT, color: isLoading || tokens === null || tokens < 200 ? 'rgba(255,255,255,0.5)' : '#080C2A', fontSize: '15px', fontWeight: 600, cursor: isLoading || tokens === null || tokens < 200 ? 'not-allowed' : 'pointer', transition: 'all 0.2s ease', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', boxShadow: isLoading || tokens === null || tokens < 200 ? 'none' : '0 4px 14px rgba(245,158,11,0.3)', marginBottom: '40px' }}
+          onMouseEnter={e => { if (!isLoading && tokens !== null && tokens >= 200) { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.background = '#FBBF24' } }}
+          onMouseLeave={e => { if (!isLoading && tokens !== null && tokens >= 200) { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = ACCENT } }}
         >
           {isLoading
             ? <><Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} />Finding B-Roll Clips...</>
