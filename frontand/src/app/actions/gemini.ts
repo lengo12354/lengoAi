@@ -65,5 +65,5 @@ export async function generateGeminiContent(
   }
 
   // If the loop finishes and we are here, it means ALL keys failed
-  throw new Error(`All API keys failed. Last error: ${lastError?.message || 'Unknown error'}`)
+  throw new Error('⚠️ The server is currently under heavy load. Please try again in a few minutes.')
 }

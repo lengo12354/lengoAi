@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Captions, Clapperboard, ScrollText } from 'lucide-react'
+import { Captions, Clapperboard, ScrollText, Users, Lock } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 const features = [
@@ -21,11 +21,11 @@ const features = [
   },
 
   {
-    icon: ScrollText,
-    title: 'Viral Script Generator',
-    description: 'Enter your topic and get a complete, highly-engaging short-form video script with a viral hook, visual cues, and a CTA.',
-    tag: 'NEW',
-    href: '/tools/viral-script',
+    icon: Users,
+    title: 'Creator Lead Finder',
+    description: 'Find high-paying clients instantly. Search any niche across YouTube, Instagram, Twitter, and Spotify to get verified emails and metrics.',
+    tag: 'SOON',
+    href: '/tools/lead-finder',
   },
 ]
 
@@ -70,7 +70,7 @@ export default function Tools() {
             transition={{ duration: 0.6, delay: 0.2 }}
             style={{ fontSize: '18px', color: 'var(--muted)', maxWidth: '520px', margin: '24px auto 0', lineHeight: 1.6 }}
           >
-            From auto-subtitles to B-roll to viral scripts, everything in one place.
+            From auto-subtitles to B-roll to finding clients, everything in one place.
           </motion.p>
         </div>
 
@@ -85,19 +85,29 @@ export default function Tools() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="tool-card-wrapper"
-                onClick={() => router.push(tool.href)}
+                className={`tool-card-wrapper ${tool.tag === 'SOON' ? 'disabled-card' : ''}`}
+                onClick={() => {
+                  if (tool.tag !== 'SOON') {
+                    router.push(tool.href)
+                  }
+                }}
+                style={{ cursor: tool.tag === 'SOON' ? 'not-allowed' : 'pointer' }}
               >
                 {/* Spinning border */}
-                <div className="tool-animated-border" />
+                <div className={`tool-animated-border ${tool.tag === 'SOON' ? 'soon-border' : ''}`} />
 
                 {/* Inner card */}
-                <div className="tool-card-inner">
+                {/* Inner card */}
+                <div className="tool-card-inner" style={{
+                  background: tool.tag === 'SOON' ? 'rgba(12, 10, 15, 0.95)' : 'rgba(8, 12, 42, 0.95)',
+                  border: tool.tag === 'SOON' ? '1px solid rgba(245, 158, 11, 0.15)' : undefined
+                }}>
                   {/* Tag */}
                   <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'flex-end' }}>
                     <span style={{
-                      background: 'linear-gradient(135deg, #3F59E7, #6A7DED)',
-                      color: '#fff',
+                      background: tool.tag === 'SOON' ? 'rgba(245, 158, 11, 0.15)' : 'linear-gradient(135deg, #3F59E7, #6A7DED)',
+                      color: tool.tag === 'SOON' ? '#FCD34D' : '#fff',
+                      border: tool.tag === 'SOON' ? '1px solid rgba(245, 158, 11, 0.3)' : 'none',
                       fontSize: '10px',
                       fontWeight: 700,
                       padding: '4px 10px',
@@ -114,13 +124,13 @@ export default function Tools() {
                     width: '64px',
                     height: '64px',
                     borderRadius: '20px',
-                    background: 'linear-gradient(135deg, rgba(63,89,231,0.2), rgba(63,89,231,0.05))',
-                    border: '1px solid rgba(63,89,231,0.3)',
+                    background: tool.tag === 'SOON' ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05))' : 'linear-gradient(135deg, rgba(63,89,231,0.2), rgba(63,89,231,0.05))',
+                    border: tool.tag === 'SOON' ? '1px solid rgba(245, 158, 11, 0.3)' : '1px solid rgba(63,89,231,0.3)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginBottom: '28px',
-                    color: '#6A7DED',
+                    color: tool.tag === 'SOON' ? '#FCD34D' : '#6A7DED',
                   }}>
                     <Icon size={30} strokeWidth={1.5} />
                   </div>
@@ -153,12 +163,12 @@ export default function Tools() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '8px',
-                    color: '#6A7DED',
+                    color: tool.tag === 'SOON' ? '#FCD34D' : '#6A7DED',
                     fontWeight: 600,
                     fontSize: '14px',
                     fontFamily: 'var(--font-heading)',
                   }}>
-                    Open tool →
+                    {tool.tag === 'SOON' ? <><Lock size={14} /> Coming Soon</> : 'Open tool →'}
                   </div>
                 </div>
               </motion.div>
@@ -233,6 +243,16 @@ export default function Tools() {
           );
           animation: tool-rotate 3s linear infinite;
           z-index: 0;
+        }
+
+        .tool-animated-border.soon-border::before {
+          background: conic-gradient(
+            from 0deg,
+            transparent 0deg,
+            rgba(245, 158, 11, 0.9) 90deg,
+            rgba(252, 211, 77, 0.7) 180deg,
+            transparent 270deg
+          );
         }
 
         @keyframes tool-rotate {

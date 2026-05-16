@@ -171,7 +171,7 @@ export async function POST(req: Request) {
           continue
         }
       }
-      throw new Error(`All Groq keys failed. Last error: ${lastError?.message}`)
+      throw new Error('⚠️ The server is currently under heavy load. Please try again in a few minutes.')
     }
 
     const buffer = Buffer.from(await file.arrayBuffer())

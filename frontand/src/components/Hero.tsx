@@ -82,7 +82,7 @@ export default function Hero() {
             margin: '0 auto 48px',
           }}
         >
-          A powerful suite of AI tools built specifically for Video Editors. Auto-subtitle videos, find cinematic B-roll, and generate viral scripts in record time.
+          A powerful suite of AI tools built specifically for Video Editors. Auto-subtitle videos, find cinematic B-roll, and discover high-paying clients in record time.
         </motion.p>
 
         {/* CTAs */}

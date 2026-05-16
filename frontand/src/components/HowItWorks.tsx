@@ -8,7 +8,7 @@ const steps = [
   {
     icon: MousePointerClick,
     title: 'Choose Your Tool',
-    description: 'Select from our suite of editing tools. Whether you need auto-subtitles, cinematic B-roll, or a viral script, we have you covered.',
+    description: 'Select from our suite of editing tools. Whether you need auto-subtitles, cinematic B-roll, or creator leads, we have you covered.',
   },
   {
     icon: Cpu,
@@ -18,7 +18,7 @@ const steps = [
   {
     icon: Download,
     title: 'Export & Publish',
-    description: 'Download your optimized assets, copy high-retention scripts, or export subtitles directly to your favorite editing software with one click.',
+    description: 'Download your optimized assets, export subtitles directly to your favorite editing software, or contact creator leads with one click.',
   },
 ]
 

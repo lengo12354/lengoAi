@@ -13,7 +13,7 @@ const faqs = [
   {
     question: 'Can I use the tools for free?',
     answer:
-      'Yes! We offer a free Starter plan that gives you limited access to all our tools, including viral script generation and auto-subtitles, so you can test the quality before upgrading.',
+      'Yes! We offer a free Starter plan that gives you limited access to all our tools, including auto-subtitles and B-roll finder, so you can test the quality before upgrading.',
   },
   {
     question: 'What languages are supported for Auto-Subtitles?',
