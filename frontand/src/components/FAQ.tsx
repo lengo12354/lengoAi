@@ -30,6 +30,11 @@ const faqs = [
     answer:
       'You can export as SRT, VTT, plain text, CapCut JSON, Premiere Pro XML, DaVinci Resolve SRT, and Final Cut Pro FCPXML. All exports include word-level timestamps on Pro.',
   },
+  {
+    question: 'When will the Creator Lead Finder be available?',
+    answer:
+      `The Creator Lead Finder is launching very soon! This powerful tool will help freelance editors and designers discover high-quality clients by searching across YouTube, Instagram, Twitter, and Spotify. You'll get verified contact info, follower metrics, and niche-specific leads all in one place. Stay tuned!`,
+  },
 
 ]
 

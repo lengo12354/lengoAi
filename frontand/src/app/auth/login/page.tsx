@@ -122,7 +122,7 @@ export default function AuthPage() {
       setLoading(false)
     } else {
       try {
-        // Create profile with 300 free tokens for new user
+        // Create profile with 200 free tokens for new user
         await initUserProfile()
       } catch (err: any) {
         console.error("Profile initialization error:", err)

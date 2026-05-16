@@ -108,7 +108,7 @@ export async function deductFixedTokens(amount: number) {
   return { success: true, tokensDeducted: amount, remainingBalance: newBalance }
 }
 
-// Called after signup to create profile with 300 free tokens if not already exists
+// Called after signup to create profile with 200 free tokens if not already exists
 export async function initUserProfile() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -118,16 +118,30 @@ export async function initUserProfile() {
   // Check if profile already exists
   const { data: existing } = await supabase
     .from('profiles')
-    .select('id')
+    .select('id, tokens_balance')
     .eq('id', user.id)
     .single()
 
-  if (existing) return { success: true, alreadyExists: true }
+  // If profile exists and already has tokens, skip (returning user)
+  if (existing && existing.tokens_balance > 0) {
+    return { success: true, alreadyExists: true }
+  }
 
-  // Create new profile with 300 free tokens
+  // If profile exists but has 0 tokens (created by DB trigger), give them 200
+  if (existing && existing.tokens_balance === 0) {
+    const { error } = await supabase
+      .from('profiles')
+      .update({ tokens_balance: 200 })
+      .eq('id', user.id)
+
+    if (error) return { success: false, error: error.message }
+    return { success: true, alreadyExists: true, tokensGranted: true }
+  }
+
+  // No profile at all — create new one with 200 free tokens
   const { error } = await supabase
     .from('profiles')
-    .insert({ id: user.id, tokens_balance: 300 })
+    .insert({ id: user.id, tokens_balance: 200 })
 
   if (error) return { success: false, error: error.message }
 

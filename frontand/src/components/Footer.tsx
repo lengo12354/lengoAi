@@ -46,9 +46,8 @@ export default function Footer() {
               {/* Social Links (Text) */}
               <div style={{ display: 'flex', gap: '16px' }}>
                 {[
-                  { name: 'Twitter', href: '#' },
-                  { name: 'YouTube', href: '#' },
-                  { name: 'Discord', href: '#' },
+                  { name: 'YouTube', href: 'https://www.youtube.com/@AwarTools' },
+                  { name: 'Instagram', href: 'https://www.instagram.com/awartools' },
                 ].map((social, i) => (
                   <a
                     key={i}
