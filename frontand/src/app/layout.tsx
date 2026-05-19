@@ -4,6 +4,7 @@ import localFont from 'next/font/local'
 import './globals.css'
 import ThemeProvider from '@/components/ThemeProvider'
 import SmoothScroller from '@/components/SmoothScroller'
+import { Analytics } from '@vercel/analytics/react'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -56,6 +57,7 @@ export default function RootLayout({
         <SmoothScroller>
           <ThemeProvider>{children}</ThemeProvider>
         </SmoothScroller>
+        <Analytics />
       </body>
     </html>
   )
