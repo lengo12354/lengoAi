@@ -1,10 +1,32 @@
 import { NextResponse } from 'next/server'
 import { YoutubeTranscript } from 'youtube-transcript'
+import YTDlpWrap from 'yt-dlp-wrap'
+import path from 'path'
+import fs from 'fs'
+import os from 'os'
 
+let ytDlpDownloadPromise: Promise<string> | null = null;
+async function ensureYtDlp(): Promise<string> {
+  const ytDlpPath = path.join(
+    process.cwd(), 'node_modules', 'yt-dlp-wrap',
+    os.platform() === 'win32' ? 'yt-dlp.exe' : 'yt-dlp'
+  )
+  if (fs.existsSync(ytDlpPath)) return ytDlpPath;
 
-// Manual fetcher bypassing EU consent
+  if (!ytDlpDownloadPromise) {
+    ytDlpDownloadPromise = (async () => {
+      const dir = path.dirname(ytDlpPath)
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
+      await YTDlpWrap.downloadFromGithub(ytDlpPath)
+      if (os.platform() !== 'win32') fs.chmodSync(ytDlpPath, '755')
+      return ytDlpPath
+    })()
+  }
+  return ytDlpDownloadPromise;
+}
+
+// 1. Manual fetcher bypassing EU consent (sometimes works)
 async function fetchTranscriptManually(videoId: string) {
-  // 1. Fetch watch page with Consent cookie
   const res = await fetch(`https://www.youtube.com/watch?v=${videoId}`, {
     headers: {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
@@ -13,36 +35,72 @@ async function fetchTranscriptManually(videoId: string) {
     }
   });
   const html = await res.text();
-
-  // 2. Extract captions data
   const playerResMatch = html.match(/ytInitialPlayerResponse\s*=\s*({.+?})\s*;\s*(?:var\s+meta|<\/script|\n)/);
   if (!playerResMatch) throw new Error('Could not find player response');
-  
   const playerRes = JSON.parse(playerResMatch[1]);
   const captions = playerRes?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
-  
-  if (!captions || captions.length === 0) {
-    throw new Error('No captions found in player response');
-  }
-
-  // 3. Find English or first available caption track
+  if (!captions || captions.length === 0) throw new Error('No captions found in player response');
   let track = captions.find((c: any) => c.languageCode === 'en' || c.languageCode === 'ar' || c.languageCode === 'fr');
   if (!track) track = captions[0];
-
-  // 4. Fetch the XML transcript
   const xmlRes = await fetch(track.baseUrl);
   const xml = await xmlRes.text();
-
-  // 5. Parse XML (simple regex parsing since it's just <text start="x" dur="y">text</text>)
   const matches = [...xml.matchAll(/<text start="([^"]+)"(?: dur="[^"]+")?[^>]*>([^<]+)<\/text>/g)];
-  
   if (matches.length === 0) throw new Error('Could not parse XML transcript');
-
   return matches.map(m => ({
-    offset: parseFloat(m[1]) * 1000, // convert seconds to ms
+    offset: parseFloat(m[1]) * 1000,
     text: m[2].replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>'),
   }));
 }
+
+// 2. yt-dlp fetcher (bypasses most bots/IP blocks because it uses Android clients internally)
+async function fetchTranscriptYtDlp(videoId: string) {
+  const ytDlpPath = await ensureYtDlp();
+  const ytDlp = new YTDlpWrap(ytDlpPath);
+  
+  const metadataStr = await ytDlp.execPromise([
+    `https://www.youtube.com/watch?v=${videoId}`,
+    '--dump-json',
+    '--no-playlist'
+  ]);
+  
+  const metadata = JSON.parse(metadataStr);
+  let captionUrl = null;
+  
+  if (metadata.subtitles && Object.keys(metadata.subtitles).length > 0) {
+    const enSub = metadata.subtitles.en || metadata.subtitles[Object.keys(metadata.subtitles)[0]];
+    const json3 = enSub?.find((x: any) => x.ext === 'json3');
+    if (json3) captionUrl = json3.url;
+  }
+  
+  if (!captionUrl && metadata.automatic_captions) {
+    const enSub = metadata.automatic_captions.en || metadata.automatic_captions[Object.keys(metadata.automatic_captions)[0]];
+    if (enSub) {
+      const json3 = enSub.find((x: any) => x.ext === 'json3');
+      if (json3) captionUrl = json3.url;
+    }
+  }
+
+  if (!captionUrl) throw new Error('No JSON3 caption URL found in yt-dlp metadata');
+
+  const captionsRes = await fetch(captionUrl);
+  const captionsData = await captionsRes.json();
+
+  let transcriptLines: any[] = [];
+  if (captionsData.events) {
+    captionsData.events.forEach((e: any) => {
+      if (e.segs && e.segs.length > 0) {
+        const text = e.segs.map((s: any) => s.utf8).join('').replace(/\n/g, ' ').trim();
+        if (text) {
+          transcriptLines.push({ offset: e.tStartMs, text });
+        }
+      }
+    });
+  }
+  
+  if (transcriptLines.length === 0) throw new Error('Parsed captions were empty');
+  return transcriptLines;
+}
+
 
 export async function POST(req: Request) {
   try {
@@ -55,22 +113,34 @@ export async function POST(req: Request) {
     let transcriptResponse = null;
     let lastError = '';
 
-    // Try manual fetch with Consent bypass first
+    // Strategy 1: yt-dlp (Strongest against IP blocks)
     try {
-      transcriptResponse = await fetchTranscriptManually(videoId);
-    } catch (manualErr: any) {
-      console.log('[YouTube Transcript] Manual fetch failed:', manualErr.message);
+      console.log('[YouTube Transcript] Attempting yt-dlp extraction...');
+      transcriptResponse = await fetchTranscriptYtDlp(videoId);
+    } catch (err: any) {
+      console.log('[YouTube Transcript] yt-dlp failed:', err.message);
+      lastError += `yt-dlp: ${err.message}. `;
       
-      // Fallback to library
-      transcriptResponse = await YoutubeTranscript.fetchTranscript(videoId).catch(err => {
-        lastError = err.message || String(err);
-        return null;
-      });
+      // Strategy 2: Manual fetch with Cookies
+      try {
+        console.log('[YouTube Transcript] Attempting Manual Cookie fetch...');
+        transcriptResponse = await fetchTranscriptManually(videoId);
+      } catch (manualErr: any) {
+        console.log('[YouTube Transcript] Manual fetch failed:', manualErr.message);
+        lastError += `Manual: ${manualErr.message}. `;
+        
+        // Strategy 3: Default youtube-transcript library
+        try {
+           transcriptResponse = await YoutubeTranscript.fetchTranscript(videoId);
+        } catch (libErr: any) {
+           lastError += `Lib: ${libErr.message}`;
+        }
+      }
     }
 
     if (!transcriptResponse || transcriptResponse.length === 0) {
       return NextResponse.json({ 
-        error: `[DEBUG] Transcript fetch failed. Server Error: ${lastError || 'Empty response'}` 
+        error: `[DEBUG] Transcript fetch failed on all methods. Errors: ${lastError}` 
       }, { status: 404 })
     }
 
