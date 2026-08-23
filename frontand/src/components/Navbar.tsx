@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Captions, LogOut, User, Zap, ChevronDown } from 'lucide-react'
+import { Menu, X, LogOut, Zap, ChevronDown, History } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 
 const navLinks = [
   { label: 'Features', href: '#tools' },
@@ -19,7 +21,9 @@ export default function Navbar() {
   const [user, setUser] = useState<any>(null)
   const [tokens, setTokens] = useState<number | null>(null)
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [hasHistory, setHasHistory] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const pathname = usePathname()
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -63,6 +67,13 @@ export default function Navbar() {
       window.removeEventListener('scroll', handleScroll)
       subscription.unsubscribe()
     }
+  }, [])
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('viralClipsHistory')
+      setHasHistory(!!(saved && JSON.parse(saved).length > 0))
+    } catch { setHasHistory(false) }
   }, [])
 
   if (!mounted) return null
@@ -251,6 +262,35 @@ export default function Navbar() {
                           </a>
                         )}
                       </div>
+
+                      {hasHistory && (
+                        <Link
+                          href="/history"
+                          onClick={() => setDropdownOpen(false)}
+                          style={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            background: 'rgba(139,92,246,0.08)',
+                            border: '1px solid rgba(139,92,246,0.15)',
+                            color: '#C4B5FD',
+                            padding: '10px 12px',
+                            borderRadius: '10px',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            fontWeight: 500,
+                            transition: 'all 0.2s',
+                            marginBottom: '8px',
+                            textDecoration: 'none',
+                          }}
+                          onMouseEnter={e => e.currentTarget.style.background = 'rgba(139,92,246,0.18)'}
+                          onMouseLeave={e => e.currentTarget.style.background = 'rgba(139,92,246,0.08)'}
+                        >
+                          <History size={16} />
+                          Activity History
+                        </Link>
+                      )}
 
                       <button
                         onClick={async () => {

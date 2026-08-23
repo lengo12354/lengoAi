@@ -15,14 +15,14 @@ export async function generateGeminiContent(
 
   // Read either GEMINI_API_KEYS (comma separated) or GEMINI_API_KEY (single)
   const keysString = process.env.GEMINI_API_KEYS || process.env.GEMINI_API_KEY
-  
+
   if (!keysString) {
     throw new Error('Server error: API keys are not configured.')
   }
 
   // Parse keys and remove any empty spaces
   const apiKeys = keysString.split(',').map(k => k.trim()).filter(k => k.length > 0)
-  
+
   if (apiKeys.length === 0) {
     throw new Error('Server error: No valid API keys found.')
   }

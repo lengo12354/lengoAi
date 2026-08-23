@@ -480,7 +480,7 @@ export default function AuthPage() {
                 style={{ position: 'absolute', bottom: '0px', left: '30px', background: 'rgba(63,89,231,0.15)', border: '1px solid rgba(63,89,231,0.3)', borderRadius: '100px', padding: '12px 24px', backdropFilter: 'blur(20px)', display: 'flex', alignItems: 'center', gap: '10px', boxShadow: '0 10px 40px rgba(0,0,0,0.4)' }}
               >
                 <Sparkles size={16} color="#60A5FA" />
-                <span style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Auto-captions generated in <strong style={{color: '#fff'}}>English</strong></span>
+                <span style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>Auto-captions generated in <strong style={{ color: '#fff' }}>English</strong></span>
               </motion.div>
 
             </div>

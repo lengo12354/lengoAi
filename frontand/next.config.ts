@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Allow large video uploads (up to 8 GB)
+    serverActions: {
+      bodySizeLimit: '8gb',
+    },
+  },
   async headers() {
     return [
       {

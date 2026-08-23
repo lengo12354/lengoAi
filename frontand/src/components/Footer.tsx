@@ -11,8 +11,8 @@ export default function Footer() {
     >
       {/* Decorative top border glow */}
       <div style={{ height: '1px', width: '100%', background: 'linear-gradient(90deg, transparent, rgba(63,89,231,0.5), transparent)' }} />
-      
-      <div 
+
+      <div
         style={{
           background: 'rgba(5, 5, 10, 0.4)',
           backdropFilter: 'blur(20px)',
@@ -21,11 +21,11 @@ export default function Footer() {
         }}
       >
         <div className="container-xl">
-          <div 
-            style={{ 
-              display: 'flex', 
-              flexWrap: 'wrap', 
-              justifyContent: 'space-between', 
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
               gap: '48px',
               marginBottom: '48px'
             }}
@@ -42,7 +42,7 @@ export default function Footer() {
               <p style={{ color: 'var(--muted)', fontSize: '15px', lineHeight: 1.6, marginBottom: '24px' }}>
                 The ultimate AI toolkit designed specifically to help video editors streamline their workflow and save hours of manual editing.
               </p>
-              
+
               {/* Social Links (Text) */}
               <div style={{ display: 'flex', gap: '16px' }}>
                 {[

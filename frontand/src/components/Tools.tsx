@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Captions, Clapperboard, ScrollText, Users, Lock } from 'lucide-react'
+import { Captions, Clapperboard, Lock, Users, TrendingUp, Scissors } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 const features = [
@@ -19,13 +19,26 @@ const features = [
     tag: 'POPULAR',
     href: '/tools/broll-finder',
   },
-
   {
     icon: Users,
     title: 'Creator Lead Finder',
-    description: 'Find high-paying clients instantly. Search any niche across YouTube, Instagram, Twitter, and Spotify to get verified emails and metrics.',
-    tag: 'SOON',
+    description: 'Find target creators in any niche. Get subscriber counts, contact emails, social profiles, and country from channels and video descriptions.',
+    tag: 'NEW',
     href: '/tools/lead-finder',
+  },
+  {
+    icon: TrendingUp,
+    title: 'AI Clip Generator',
+    description: 'Paste a transcript or YouTube link. AI finds the best viral moments and automatically generates 16:9 or 9:16 video clips for you.',
+    tag: 'NEW',
+    href: '/tools/viral-clips',
+  },
+  {
+    icon: Scissors,
+    title: 'Manual Clip Maker',
+    description: 'Already know the timestamps? Enter a YouTube link, set start/end times, and instantly crop and download your clip.',
+    tag: 'NEW',
+    href: '/tools/clip-maker',
   },
 ]
 
@@ -94,20 +107,19 @@ export default function Tools() {
                 style={{ cursor: tool.tag === 'SOON' ? 'not-allowed' : 'pointer' }}
               >
                 {/* Spinning border */}
-                <div className={`tool-animated-border ${tool.tag === 'SOON' ? 'soon-border' : ''}`} />
+                <div className={`tool-animated-border ${tool.tag === 'SOON' ? 'soon-border' : tool.tag === 'NEW' ? 'new-border' : ''}`} />
 
                 {/* Inner card */}
-                {/* Inner card */}
                 <div className="tool-card-inner" style={{
-                  background: tool.tag === 'SOON' ? 'rgba(12, 10, 15, 0.95)' : 'rgba(8, 12, 42, 0.95)',
-                  border: tool.tag === 'SOON' ? '1px solid rgba(245, 158, 11, 0.15)' : undefined
+                  background: tool.tag === 'SOON' ? 'rgba(12, 10, 15, 0.95)' : tool.tag === 'NEW' ? 'rgba(10, 8, 28, 0.95)' : 'rgba(8, 12, 42, 0.95)',
+                  border: tool.tag === 'SOON' ? '1px solid rgba(245, 158, 11, 0.15)' : tool.tag === 'NEW' ? '1px solid rgba(139, 92, 246, 0.15)' : undefined
                 }}>
                   {/* Tag */}
                   <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'flex-end' }}>
                     <span style={{
-                      background: tool.tag === 'SOON' ? 'rgba(245, 158, 11, 0.15)' : 'linear-gradient(135deg, #3F59E7, #6A7DED)',
-                      color: tool.tag === 'SOON' ? '#FCD34D' : '#fff',
-                      border: tool.tag === 'SOON' ? '1px solid rgba(245, 158, 11, 0.3)' : 'none',
+                      background: tool.tag === 'SOON' ? 'rgba(245, 158, 11, 0.15)' : tool.tag === 'NEW' ? 'rgba(139, 92, 246, 0.2)' : 'linear-gradient(135deg, #3F59E7, #6A7DED)',
+                      color: tool.tag === 'SOON' ? '#FCD34D' : tool.tag === 'NEW' ? '#C4B5FD' : '#fff',
+                      border: tool.tag === 'SOON' ? '1px solid rgba(245, 158, 11, 0.3)' : tool.tag === 'NEW' ? '1px solid rgba(139, 92, 246, 0.4)' : 'none',
                       fontSize: '10px',
                       fontWeight: 700,
                       padding: '4px 10px',
@@ -124,13 +136,13 @@ export default function Tools() {
                     width: '64px',
                     height: '64px',
                     borderRadius: '20px',
-                    background: tool.tag === 'SOON' ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05))' : 'linear-gradient(135deg, rgba(63,89,231,0.2), rgba(63,89,231,0.05))',
-                    border: tool.tag === 'SOON' ? '1px solid rgba(245, 158, 11, 0.3)' : '1px solid rgba(63,89,231,0.3)',
+                    background: tool.tag === 'SOON' ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05))' : tool.tag === 'NEW' ? 'linear-gradient(135deg, rgba(139,92,246,0.2), rgba(139,92,246,0.05))' : 'linear-gradient(135deg, rgba(63,89,231,0.2), rgba(63,89,231,0.05))',
+                    border: tool.tag === 'SOON' ? '1px solid rgba(245, 158, 11, 0.3)' : tool.tag === 'NEW' ? '1px solid rgba(139,92,246,0.35)' : '1px solid rgba(63,89,231,0.3)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginBottom: '28px',
-                    color: tool.tag === 'SOON' ? '#FCD34D' : '#6A7DED',
+                    color: tool.tag === 'SOON' ? '#FCD34D' : tool.tag === 'NEW' ? '#A78BFA' : '#6A7DED',
                   }}>
                     <Icon size={30} strokeWidth={1.5} />
                   </div>
@@ -163,7 +175,7 @@ export default function Tools() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '8px',
-                    color: tool.tag === 'SOON' ? '#FCD34D' : '#6A7DED',
+                    color: tool.tag === 'SOON' ? '#FCD34D' : tool.tag === 'NEW' ? '#A78BFA' : '#6A7DED',
                     fontWeight: 600,
                     fontSize: '14px',
                     fontFamily: 'var(--font-heading)',
@@ -196,6 +208,8 @@ export default function Tools() {
           grid-template-columns: repeat(3, 1fr);
           gap: 24px;
           align-items: stretch;
+          max-width: 1200px;
+          margin: 0 auto;
         }
 
         .tool-card-wrapper {
@@ -251,6 +265,16 @@ export default function Tools() {
             transparent 0deg,
             rgba(245, 158, 11, 0.9) 90deg,
             rgba(252, 211, 77, 0.7) 180deg,
+            transparent 270deg
+          );
+        }
+
+        .tool-animated-border.new-border::before {
+          background: conic-gradient(
+            from 0deg,
+            transparent 0deg,
+            rgba(139, 92, 246, 0.9) 90deg,
+            rgba(196, 181, 253, 0.7) 180deg,
             transparent 270deg
           );
         }

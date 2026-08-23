@@ -10,6 +10,9 @@ import Link from 'next/link'
 import { generateGeminiContent } from '@/app/actions/gemini'
 import { getUserTokens, deductFixedTokens } from '@/app/actions/tokens'
 
+const BROLL_HISTORY_KEY = 'brollHistory'
+const MAX_HISTORY = 30
+
 const SYSTEM_PROMPT = `You are a professional film/video editor and movie expert.
 IMPORTANT: Detect the exact language/dialect of the user's text/script (e.g., Moroccan Darija, English, Arabic, French).
 You MUST write all your suggestions and explanations entirely in THAT SAME LANGUAGE.
@@ -113,8 +116,23 @@ export default function BrollFinderPage() {
       const parsed = JSON.parse(cleaned)
 
       if (parsed.brolls && Array.isArray(parsed.brolls) && parsed.brolls.length > 0) {
-        setResults(parsed.brolls.slice(0, 5))
+        const brolls = parsed.brolls.slice(0, 5)
+        setResults(brolls)
         setExpandedIdx(0)
+
+        // Save to history
+        try {
+          const historyItem = {
+            id: Date.now().toString(),
+            date: new Date().toISOString(),
+            inputText: inputText.trim().slice(0, 120),
+            brolls,
+          }
+          const saved = localStorage.getItem(BROLL_HISTORY_KEY)
+          const prev = saved ? JSON.parse(saved) : []
+          const updated = [historyItem, ...prev].slice(0, MAX_HISTORY)
+          localStorage.setItem(BROLL_HISTORY_KEY, JSON.stringify(updated))
+        } catch {}
       } else {
         throw new Error('No B-roll suggestions found in response.')
       }
