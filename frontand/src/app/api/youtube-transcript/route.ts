@@ -21,8 +21,39 @@ export async function POST(req: Request) {
     });
 
     console.log('[YouTube Transcript] Attempting default fetch...');
+    let lastError = '';
+
+    // [Vercel Debug] Let's do a manual fetch to see exactly what YouTube returns to Vercel
+    try {
+      const debugRes = await fetch(`https://www.youtube.com/watch?v=${videoId}`, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36' }
+      });
+      const debugHtml = await debugRes.text();
+      console.log(`[YouTube Transcript Debug] Watch page status: ${debugRes.status}`);
+      console.log(`[YouTube Transcript Debug] HTML length: ${debugHtml.length}`);
+      
+      const isConsent = debugHtml.includes('consent.youtube.com') || debugHtml.includes('CONSENT');
+      const isCaptcha = debugHtml.includes('google.com/recaptcha') || debugHtml.includes('captcha');
+      const hasCaptions = debugHtml.includes('"captions":');
+      const hasPlayerRes = debugHtml.includes('ytInitialPlayerResponse');
+      
+      console.log(`[YouTube Transcript Debug] Flags -> isConsent: ${isConsent}, isCaptcha: ${isCaptcha}, hasPlayerRes: ${hasPlayerRes}, hasCaptions: ${hasCaptions}`);
+      
+      if (!hasPlayerRes || !hasCaptions) {
+        const snippet = debugHtml.substring(0, 500).replace(/\n/g, ' ');
+        console.log(`[YouTube Transcript Debug] HTML Snippet: ${snippet}`);
+        
+        if (isConsent) lastError += ' [YouTube served a consent page blocking data]';
+        else if (isCaptcha) lastError += ' [YouTube served a Captcha]';
+        else lastError += ` [YouTube returned HTML without captions data (Status ${debugRes.status})]`;
+      }
+    } catch (e: any) {
+      console.error(`[YouTube Transcript Debug] Manual fetch failed: ${e.message}`);
+    }
+
     let transcriptResponse = await YoutubeTranscript.fetchTranscript(videoId).catch(err => {
-      console.error('[YouTube Transcript] Default fetch failed with error:', err.message || err);
+      lastError = err.message || String(err);
+      console.error('[YouTube Transcript] Default fetch failed with error:', lastError);
       return null;
     })
     
@@ -31,7 +62,8 @@ export async function POST(req: Request) {
       const fallbackLangs = ['en', 'ar', 'fr', 'es', 'pt', 'de', 'hi', 'ja']
       for (const lang of fallbackLangs) {
         transcriptResponse = await YoutubeTranscript.fetchTranscript(videoId, { lang }).catch(err => {
-          console.error(`[YouTube Transcript] Fallback lang '${lang}' failed:`, err.message || err);
+          lastError = err.message || String(err);
+          console.error(`[YouTube Transcript] Fallback lang '${lang}' failed:`, lastError);
           return null;
         })
         if (transcriptResponse && transcriptResponse.length > 0) {
@@ -42,7 +74,9 @@ export async function POST(req: Request) {
     }
 
     if (!transcriptResponse || transcriptResponse.length === 0) {
-      return NextResponse.json({ error: 'No transcript found for this video' }, { status: 404 })
+      return NextResponse.json({ 
+        error: `[DEBUG] Transcript fetch failed. Server Error: ${lastError || 'Empty response'}` 
+      }, { status: 404 })
     }
 
     // Format the transcript for Gemini (include timestamps so Gemini can reference them)
