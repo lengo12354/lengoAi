@@ -7,18 +7,17 @@ import { ArrowLeft, Loader2, Copy, Check, AlertCircle, TrendingUp, Zap, Clock, T
 // Platform icons not in this version of lucide-react
 const YoutubeIcon = ({ size = 20 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
   </svg>
 )
 const TwitchIcon = ({ size = 20 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/>
+    <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z" />
   </svg>
 )
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { getUserTokens } from '@/app/actions/tokens'
-
-const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL || ''
 
 // --- Types ---
 interface Clip {
@@ -164,7 +163,7 @@ function ViralClipsInner() {
             streamContext: h.data?.streamContext || '',
           })))
         }
-      }).catch(() => {})
+      }).catch(() => { })
     // Load item if navigated from Navbar history panel
     const pendingLoad = localStorage.getItem('viralClipsLoadItem')
     if (pendingLoad) {
@@ -199,7 +198,7 @@ function ViralClipsInner() {
 
     try {
       setAnalyzeStep('Fetching transcript...')
-      const res = await fetch(`${WORKER_URL}/api/youtube-transcript`, {
+      const res = await fetch('/api/youtube-transcript', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: youtubeUrl }),
@@ -298,7 +297,7 @@ function ViralClipsInner() {
     }
 
     try {
-      const res = await fetch(`${WORKER_URL}/api/clip-maker`, { method: 'POST', body: fd })
+      const res = await fetch('/api/clip-maker', { method: 'POST', body: fd })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Request failed')
 
@@ -307,7 +306,7 @@ function ViralClipsInner() {
       return new Promise<void>((resolve) => {
         const pollInterval = setInterval(async () => {
           try {
-            const statusRes = await fetch(`${WORKER_URL}/api/clip-maker/status/${data.jobId}`)
+            const statusRes = await fetch(`/api/clip-maker/status/${data.jobId}`)
             const statusData = await statusRes.json()
             if (statusData.status === 'done') {
               clearInterval(pollInterval)
@@ -317,7 +316,7 @@ function ViralClipsInner() {
                   ...prev[idx],
                   status: 'done',
                   progress: 100,
-                  videoBlobUrl: `${WORKER_URL}/api/clip-maker/download/${data.jobId}`,
+                  videoBlobUrl: `/api/clip-maker/download/${data.jobId}`,
                   outputName: statusData.outputName || 'clip.mp4'
                 }
               }))
@@ -404,7 +403,7 @@ function ViralClipsInner() {
     // Download each clip individually with a small delay
     for (const { job, clipNum } of successfulJobs) {
       const a = document.createElement('a')
-      a.href = job.videoBlobUrl || `${WORKER_URL}/api/clip-maker/download/${job.jobId}`
+      a.href = job.videoBlobUrl || `/api/clip-maker/download/${job.jobId}`
       a.download = `clip_${clipNum}.mp4`
       document.body.appendChild(a)
       a.click()
