@@ -16,8 +16,9 @@ const TwitchIcon = ({ size = 20 }: { size?: number }) => (
   </svg>
 )
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { getUserTokens } from '@/app/actions/tokens'
+
+const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL || ''
 
 // --- Types ---
 interface Clip {
@@ -198,7 +199,7 @@ function ViralClipsInner() {
 
     try {
       setAnalyzeStep('Fetching transcript...')
-      const res = await fetch('/api/youtube-transcript', {
+      const res = await fetch(`${WORKER_URL}/api/youtube-transcript`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: youtubeUrl }),
@@ -297,7 +298,7 @@ function ViralClipsInner() {
     }
 
     try {
-      const res = await fetch('/api/clip-maker', { method: 'POST', body: fd })
+      const res = await fetch(`${WORKER_URL}/api/clip-maker`, { method: 'POST', body: fd })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Request failed')
 
@@ -306,7 +307,7 @@ function ViralClipsInner() {
       return new Promise<void>((resolve) => {
         const pollInterval = setInterval(async () => {
           try {
-            const statusRes = await fetch(`/api/clip-maker/status/${data.jobId}`)
+            const statusRes = await fetch(`${WORKER_URL}/api/clip-maker/status/${data.jobId}`)
             const statusData = await statusRes.json()
             if (statusData.status === 'done') {
               clearInterval(pollInterval)
@@ -316,7 +317,7 @@ function ViralClipsInner() {
                   ...prev[idx],
                   status: 'done',
                   progress: 100,
-                  videoBlobUrl: `/api/clip-maker/download/${data.jobId}`,
+                  videoBlobUrl: `${WORKER_URL}/api/clip-maker/download/${data.jobId}`,
                   outputName: statusData.outputName || 'clip.mp4'
                 }
               }))
@@ -403,7 +404,7 @@ function ViralClipsInner() {
     // Download each clip individually with a small delay
     for (const { job, clipNum } of successfulJobs) {
       const a = document.createElement('a')
-      a.href = `/api/clip-maker/download/${job.jobId}`
+      a.href = job.videoBlobUrl || `${WORKER_URL}/api/clip-maker/download/${job.jobId}`
       a.download = `clip_${clipNum}.mp4`
       document.body.appendChild(a)
       a.click()
