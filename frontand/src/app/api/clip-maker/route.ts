@@ -60,30 +60,10 @@ async function downloadSectionWithYtDlp(
   const ytDlpPath = await ensureYtDlp()
   const ytDlp = new YTDlpWrap(ytDlpPath)
 
-  console.log('[YT-DLP] ==============================');
-  console.log('[YT-DLP] Attempting to download section for:', youtubeUrl);
-  console.log('[YT-DLP] Environment:', { 
-    NODE_ENV: process.env.NODE_ENV,
-    VERCEL: process.env.VERCEL,
-    VERCEL_ENV: process.env.VERCEL_ENV
-  });
-
-  // Log yt-dlp version
-  try {
-    await new Promise((res) => {
-      let v = '';
-      const p = spawn(ytDlpPath, ['--version']);
-      p.stdout.on('data', d => v += d.toString());
-      p.on('close', () => { console.log('[YT-DLP] Version:', v.trim()); res(null); });
-      p.on('error', () => res(null));
-    });
-  } catch(e) { console.error('[YT-DLP] Failed to get version', e); }
-
   const ytDlpArgs = [
     youtubeUrl,
-    '-f', 'bestvideo[height<=1080]+bestaudio/best[height<=1080]/best',
-    '-S', 'res:1080,ext:mp4:m4a',
-    '--merge-output-format', 'mp4',
+    '-f', 'bestvideo[height<=1080]+bestaudio/best',
+    '--merge-output-format', 'mkv',
     '--download-sections', `*${startSec}-${endSec}`,
     '--ffmpeg-location', ffmpegPath,
     '--no-cache-dir',
@@ -91,27 +71,18 @@ async function downloadSectionWithYtDlp(
     '-o', tempPath
   ]
 
-  console.log('[YT-DLP] Executing with args:', ytDlpArgs.join(' '));
-
   return new Promise((resolve, reject) => {
     const ytDlpEmitter = ytDlp.exec(ytDlpArgs)
 
-    let stdout = ''
     let stderr = ''
     ytDlpEmitter.on('ytDlpEvent', (eventType, eventData) => {
-      if (eventType === 'youtubeDlEvent') stdout += eventData + '\n'
+      // We can log events if needed
     })
     ytDlpEmitter.on('close', () => {
-      console.log('[YT-DLP] Process closed. Output exists?', fs.existsSync(tempPath))
-      if (!fs.existsSync(tempPath)) {
-        console.error('[YT-DLP] Original stderr:\n', stderr)
-        console.error('[YT-DLP] Original stdout:\n', stdout)
-      }
       if (fs.existsSync(tempPath)) resolve()
       else reject(new Error(`yt-dlp failed to create output file. Log: ${stderr}`))
     })
     ytDlpEmitter.on('error', (error) => {
-      console.error('[YT-DLP] Execution error:', error)
       stderr += error.message
       reject(error)
     })
@@ -131,7 +102,7 @@ async function runFFmpegFromYouTube(
   const duration = endSec - startSec
   const outputName = `clip_${jobId}.mp4`
   const outputPath = path.join(os.tmpdir(), outputName)
-  const tempInput = path.join(os.tmpdir(), `yt_${jobId}.mp4`)
+  const tempInput = path.join(os.tmpdir(), `yt_${jobId}.mkv`)
   const ffmpegPath = getFFmpegPath()
 
   // Update progress: downloading phase (0→50%)
@@ -177,7 +148,7 @@ async function runFFmpegFromYouTube(
   args.push(
     '-c:v', 'libx264',
     '-preset', 'fast',
-    '-crf', '23',
+    '-crf', '18', // Lower CRF for much better quality
     '-threads', '2',
     '-c:a', 'aac',
     '-b:a', '128k',
