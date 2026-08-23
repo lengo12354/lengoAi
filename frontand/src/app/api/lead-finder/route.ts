@@ -420,18 +420,18 @@ export async function POST(req: NextRequest) {
         const fs = require('fs')
         if (insertError) {
           console.error('[Lead Finder History Insert Error]', insertError)
-          fs.appendFileSync('supabase-debug.log', `[Insert Error] ${new Date().toISOString()}: ${JSON.stringify(insertError)}\n`)
+          console.log(`[Insert Error] ${new Date().toISOString()}: ${JSON.stringify(insertError)}\n`)
         } else {
-          fs.appendFileSync('supabase-debug.log', `[Insert Success] ${new Date().toISOString()}: Saved "${niche}" for user ${user.id}\n`)
+          console.log(`[Insert Success] ${new Date().toISOString()}: Saved "${niche}" for user ${user.id}\n`)
         }
       } else {
         const fs = require('fs')
-        fs.appendFileSync('supabase-debug.log', `[Insert Skipped] ${new Date().toISOString()}: User is ${user ? user.id : 'null'} / Leads count is ${filteredLeads.length}\n`)
+        console.log(`[Insert Skipped] ${new Date().toISOString()}: User is ${user ? user.id : 'null'} / Leads count is ${filteredLeads.length}\n`)
       }
     } catch (saveError: any) {
       console.warn('[Lead Finder History Save Error]', saveError)
       const fs = require('fs')
-      fs.appendFileSync('supabase-debug.log', `[Save Catch Error] ${new Date().toISOString()}: ${saveError.message || saveError}\n`)
+      console.log(`[Save Catch Error] ${new Date().toISOString()}: ${saveError.message || saveError}\n`)
     }
 
     return NextResponse.json({
@@ -455,7 +455,7 @@ export async function GET(req: NextRequest) {
     const fs = require('fs')
 
     if (!user) {
-      fs.appendFileSync('supabase-debug.log', `[GET Unauthorized] ${new Date().toISOString()}\n`)
+      console.log(`[GET Unauthorized] ${new Date().toISOString()}\n`)
       return NextResponse.json({ error: 'Unauthorized. Please log in.' }, { status: 401 })
     }
 
@@ -465,19 +465,19 @@ export async function GET(req: NextRequest) {
       .order('created_at', { ascending: false })
 
     if (error) {
-      fs.appendFileSync('supabase-debug.log', `[GET Error] ${new Date().toISOString()}: ${JSON.stringify(error)}\n`)
+      console.log(`[GET Error] ${new Date().toISOString()}: ${JSON.stringify(error)}\n`)
       if (error.code === 'PGRST116' || error.message?.includes('does not exist')) {
         return NextResponse.json({ history: [] })
       }
       throw error
     }
 
-    fs.appendFileSync('supabase-debug.log', `[GET Success] ${new Date().toISOString()}: Found ${data ? data.length : 0} items for user ${user.id}\n`)
+    console.log(`[GET Success] ${new Date().toISOString()}: Found ${data ? data.length : 0} items for user ${user.id}\n`)
     return NextResponse.json({ history: data || [] })
   } catch (error: any) {
     console.error('[Lead Finder History GET Error]', error)
     const fs = require('fs')
-    fs.appendFileSync('supabase-debug.log', `[GET Catch Error] ${new Date().toISOString()}: ${error.message || error}\n`)
+    console.log(`[GET Catch Error] ${new Date().toISOString()}: ${error.message || error}\n`)
     return NextResponse.json({ error: error.message || 'Failed to fetch history.' }, { status: 500 })
   }
 }
@@ -487,7 +487,7 @@ export async function DELETE(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
     const id = searchParams.get('id')
-    fs.appendFileSync('supabase-debug.log', `[DELETE Attempt] ${new Date().toISOString()}: id=${id}\n`)
+    console.log(`[DELETE Attempt] ${new Date().toISOString()}: id=${id}\n`)
 
     if (!id) {
       return NextResponse.json({ error: 'Missing id parameter.' }, { status: 400 })
@@ -497,10 +497,10 @@ export async function DELETE(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
-      fs.appendFileSync('supabase-debug.log', `[DELETE Unauthorized] ${new Date().toISOString()}\n`)
+      console.log(`[DELETE Unauthorized] ${new Date().toISOString()}\n`)
       return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 })
     }
-    fs.appendFileSync('supabase-debug.log', `[DELETE User] ${new Date().toISOString()}: ${user.id}\n`)
+    console.log(`[DELETE User] ${new Date().toISOString()}: ${user.id}\n`)
 
     let query = supabase
       .from('lead_finder_history')
@@ -512,16 +512,16 @@ export async function DELETE(req: NextRequest) {
     }
 
     const { data, error } = await query.select()
-    fs.appendFileSync('supabase-debug.log', `[DELETE Executed] ${new Date().toISOString()}: error=${error}, data=${JSON.stringify(data)}\n`)
+    console.log(`[DELETE Executed] ${new Date().toISOString()}: error=${error}, data=${JSON.stringify(data)}\n`)
 
     if (error) {
-      fs.appendFileSync('supabase-debug.log', `[DELETE Error] ${new Date().toISOString()}: ${error.message}\n`)
+      console.log(`[DELETE Error] ${new Date().toISOString()}: ${error.message}\n`)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
     return NextResponse.json({ success: true, deleted: data })
   } catch (error: any) {
-    fs.appendFileSync('supabase-debug.log', `[DELETE Catch Error] ${new Date().toISOString()}: ${error.message || error}\n`)
+    console.log(`[DELETE Catch Error] ${new Date().toISOString()}: ${error.message || error}\n`)
     return NextResponse.json({ error: error.message || 'Failed to delete.' }, { status: 500 })
   }
 }
