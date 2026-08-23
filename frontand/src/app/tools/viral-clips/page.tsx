@@ -147,20 +147,34 @@ function ViralClipsInner() {
   useEffect(() => {
     setMounted(true)
     getUserTokens().then(t => setTokens(t))
-    const saved = localStorage.getItem('viralClipsHistory')
-    if (saved) {
-      try { setHistory(JSON.parse(saved)) } catch (e) { }
-    }
+    // Load history from Supabase
+    fetch('/api/activity-history?tool_id=viral-clips')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data?.history) {
+          setHistory(data.history.map((h: any) => ({
+            id: h.id,
+            date: h.created_at,
+            fileName: null,
+            youtubeUrl: h.youtube_url,
+            transcriptPreview: '',
+            durationFormat: h.data?.durationFormat || 'reel',
+            clips: h.data?.clips || [],
+            streamContext: h.data?.streamContext || '',
+          })))
+        }
+      }).catch(() => {})
     // Load item if navigated from Navbar history panel
     const pendingLoad = localStorage.getItem('viralClipsLoadItem')
     if (pendingLoad) {
       try {
         const item = JSON.parse(pendingLoad)
-        setClips(item.clips || [])
-        setYoutubeUrl(item.youtubeUrl || '')
-        setStreamContext(item.streamContext || '')
-        if (item.streamContext) setShowContext(true)
-        if (item.durationFormat) setDurationFormat(item.durationFormat)
+        setClips(item.clips || item.data?.clips || [])
+        setYoutubeUrl(item.youtubeUrl || item.youtube_url || '')
+        const ctx = item.streamContext || item.data?.streamContext || ''
+        setStreamContext(ctx)
+        if (ctx) setShowContext(true)
+        if (item.durationFormat || item.data?.durationFormat) setDurationFormat(item.durationFormat || item.data?.durationFormat)
         setSelectedIndices([])
         setBatchJobs({})
       } catch { }
@@ -224,20 +238,31 @@ function ViralClipsInner() {
           playTone(784, 0.3, 0.3)   // G5
         } catch { }
 
-        const newHistoryItem: HistoryItem = {
-          id: Date.now().toString(),
-          date: new Date().toISOString(),
-          fileName: null,
-          youtubeUrl,
-          transcriptPreview: finalTranscript.substring(0, 50) + '...',
-          durationFormat,
-          clips: analysisData.clips,
-        }
-        setHistory(prev => {
-          const updated = [newHistoryItem, ...prev].slice(0, 10)
-          localStorage.setItem('viralClipsHistory', JSON.stringify(updated))
-          return updated
-        })
+        // Save to Supabase
+        try {
+          const saveRes = await fetch('/api/activity-history', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              tool_id: 'viral-clips',
+              youtube_url: youtubeUrl,
+              data: { clips: analysisData.clips, durationFormat, streamContext },
+            }),
+          })
+          if (saveRes.ok) {
+            const { item } = await saveRes.json()
+            const newHistoryItem: HistoryItem = {
+              id: item.id,
+              date: item.created_at,
+              fileName: null,
+              youtubeUrl,
+              transcriptPreview: '',
+              durationFormat,
+              clips: analysisData.clips,
+            }
+            setHistory(prev => [newHistoryItem, ...prev].slice(0, 30))
+          }
+        } catch { }
       }
     } catch (err: any) {
       setError(err.message || 'Something went wrong')
@@ -388,13 +413,12 @@ function ViralClipsInner() {
     }
   }
 
-  const deleteHistoryItem = (id: string, e: React.MouseEvent) => {
+  const deleteHistoryItem = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation()
-    setHistory(prev => {
-      const updated = prev.filter(h => h.id !== id)
-      localStorage.setItem('viralClipsHistory', JSON.stringify(updated))
-      return updated
-    })
+    try {
+      await fetch(`/api/activity-history?id=${id}`, { method: 'DELETE' })
+    } catch { }
+    setHistory(prev => prev.filter(h => h.id !== id))
   }
 
   if (!mounted) return null

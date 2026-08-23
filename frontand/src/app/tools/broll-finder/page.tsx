@@ -120,18 +120,17 @@ export default function BrollFinderPage() {
         setResults(brolls)
         setExpandedIdx(0)
 
-        // Save to history
+        // Save to Supabase
         try {
-          const historyItem = {
-            id: Date.now().toString(),
-            date: new Date().toISOString(),
-            inputText: inputText.trim().slice(0, 120),
-            brolls,
-          }
-          const saved = localStorage.getItem(BROLL_HISTORY_KEY)
-          const prev = saved ? JSON.parse(saved) : []
-          const updated = [historyItem, ...prev].slice(0, MAX_HISTORY)
-          localStorage.setItem(BROLL_HISTORY_KEY, JSON.stringify(updated))
+          fetch('/api/activity-history', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              tool_id: 'broll-finder',
+              input_text: inputText.trim().slice(0, 120),
+              data: { brolls },
+            }),
+          }).catch(() => {})
         } catch {}
       } else {
         throw new Error('No B-roll suggestions found in response.')

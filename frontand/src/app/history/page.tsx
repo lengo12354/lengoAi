@@ -8,10 +8,10 @@ import { useRouter } from 'next/navigation'
 
 // --- Tool Registry ---
 const TOOLS = [
-  { id: 'all', label: 'All Activity', icon: LayoutDashboard, color: '#8B5CF6', bg: 'rgba(139,92,246,0.15)', storageKey: null, apiSource: null, href: null, loadKey: null },
-  { id: 'viral-clips', label: 'Viral Clips Maker', icon: Zap, color: '#10B981', bg: 'rgba(16,185,129,0.15)', storageKey: 'viralClipsHistory', apiSource: null, href: '/tools/viral-clips', loadKey: 'viralClipsLoadItem' },
-  { id: 'lead-finder', label: 'Lead Finder', icon: Users, color: '#3B82F6', bg: 'rgba(59,130,246,0.15)', storageKey: null, apiSource: '/api/lead-finder', href: '/tools/lead-finder', loadKey: null },
-  { id: 'broll-finder', label: 'B-Roll Finder', icon: Film, color: '#F59E0B', bg: 'rgba(245,158,11,0.15)', storageKey: 'brollHistory', apiSource: null, href: '/tools/broll-finder', loadKey: null },
+  { id: 'all', label: 'All Activity', icon: LayoutDashboard, color: '#8B5CF6', bg: 'rgba(139,92,246,0.15)', href: null, loadKey: null },
+  { id: 'viral-clips', label: 'Viral Clips Maker', icon: Zap, color: '#10B981', bg: 'rgba(16,185,129,0.15)', href: '/tools/viral-clips', loadKey: 'viralClipsLoadItem' },
+  { id: 'lead-finder', label: 'Lead Finder', icon: Users, color: '#3B82F6', bg: 'rgba(59,130,246,0.15)', href: '/tools/lead-finder', loadKey: null },
+  { id: 'broll-finder', label: 'B-Roll Finder', icon: Film, color: '#F59E0B', bg: 'rgba(245,158,11,0.15)', href: '/tools/broll-finder', loadKey: null },
 ]
 
 interface HistoryItem {
@@ -55,53 +55,56 @@ export default function HistoryPage() {
       setLoading(true)
       const items: HistoryItem[] = []
 
-      // 1. LocalStorage sources (e.g. viral-clips)
-      TOOLS.forEach(tool => {
-        if (!tool.storageKey) return
-        try {
-          const saved = localStorage.getItem(tool.storageKey)
-          if (saved) {
-            JSON.parse(saved).forEach((item: any) => {
-              items.push({
-                ...item,
-                toolId: tool.id,
-                toolLabel: tool.label,
-                toolColor: tool.color,
-                toolBg: tool.bg,
-                date: item.date || item.created_at,
-              })
-            })
-          }
-        } catch { }
-      })
-
-      // 2. API sources (e.g. lead-finder — stored in Supabase)
-      await Promise.all(
-        TOOLS.filter(t => t.apiSource).map(async tool => {
-          try {
-            const res = await fetch(`${tool.apiSource!}?t=${Date.now()}`, {
-              cache: 'no-store',
-              headers: {
-                'Pragma': 'no-cache',
-                'Cache-Control': 'no-cache'
-              }
-            })
-            if (!res.ok) return
-            const data = await res.json()
-            const list = data.history || []
-            list.forEach((item: any) => {
-              items.push({
-                ...item,
-                toolId: tool.id,
-                toolLabel: tool.label,
-                toolColor: tool.color,
-                toolBg: tool.bg,
-                date: item.created_at || item.date,
-              })
-            })
-          } catch { }
+      // 1. Unified activity history from Supabase (viral-clips, broll-finder)
+      try {
+        const res = await fetch(`/api/activity-history?t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache' }
         })
-      )
+        if (res.ok) {
+          const data = await res.json()
+          const list = data.history || []
+          list.forEach((item: any) => {
+            const tool = TOOLS.find(t => t.id === item.tool_id)
+            if (!tool) return
+            items.push({
+              id: item.id,
+              date: item.created_at,
+              toolId: tool.id,
+              toolLabel: tool.label,
+              toolColor: tool.color,
+              toolBg: tool.bg,
+              youtubeUrl: item.youtube_url,
+              inputText: item.input_text,
+              clips: item.data?.clips,
+              brolls: item.data?.brolls,
+            })
+          })
+        }
+      } catch { }
+
+      // 2. Lead-finder history (still uses its own API)
+      try {
+        const res = await fetch(`/api/lead-finder?t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache' }
+        })
+        if (res.ok) {
+          const data = await res.json()
+          const list = data.history || []
+          const tool = TOOLS.find(t => t.id === 'lead-finder')!
+          list.forEach((item: any) => {
+            items.push({
+              ...item,
+              toolId: tool.id,
+              toolLabel: tool.label,
+              toolColor: tool.color,
+              toolBg: tool.bg,
+              date: item.created_at || item.date,
+            })
+          })
+        }
+      } catch { }
 
       items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       setAllHistory(items)
@@ -133,26 +136,16 @@ export default function HistoryPage() {
   const deleteItem = async (id: string, toolId: string) => {
     if (!window.confirm('Are you sure you want to delete this item?')) return
 
-    const tool = TOOLS.find(t => t.id === toolId)
-    if (tool?.storageKey) {
+    if (toolId === 'lead-finder') {
       try {
-        const saved = localStorage.getItem(tool.storageKey)
-        if (saved) {
-          const updated = JSON.parse(saved).filter((h: any) => h.id !== id)
-          localStorage.setItem(tool.storageKey, JSON.stringify(updated))
-        }
-      } catch { }
-    } else if (tool?.apiSource) {
+        const res = await fetch(`/api/lead-finder?id=${id}`, { method: 'DELETE' })
+        if (!res.ok) { alert('Failed to delete item.'); return }
+      } catch { alert('Network error.'); return }
+    } else {
       try {
-        const res = await fetch(`${tool.apiSource}?id=${id}`, { method: 'DELETE' })
-        if (!res.ok) {
-          alert('Failed to delete item from the server.')
-          return
-        }
-      } catch {
-        alert('Network error when deleting item.')
-        return
-      }
+        const res = await fetch(`/api/activity-history?id=${id}`, { method: 'DELETE' })
+        if (!res.ok) { alert('Failed to delete item.'); return }
+      } catch { alert('Network error.'); return }
     }
     setAllHistory(prev => prev.filter(h => h.id !== id))
   }
@@ -162,23 +155,16 @@ export default function HistoryPage() {
       return
     }
 
-    const tool = TOOLS.find(t => t.id === toolId)
-
-    if (tool?.storageKey) {
-      localStorage.removeItem(tool.storageKey)
-    } else if (tool?.apiSource) {
+    if (toolId === 'lead-finder') {
       try {
-        const res = await fetch(`${tool.apiSource}?id=all`, { method: 'DELETE' })
-        if (!res.ok) {
-          console.error('Failed to clear history from server')
-          alert('Failed to clear history from the server. Please try again.')
-          return
-        }
-      } catch (err) {
-        console.error('Network error clearing history:', err)
-        alert('Network error. Please try again.')
-        return
-      }
+        const res = await fetch(`/api/lead-finder?id=all`, { method: 'DELETE' })
+        if (!res.ok) { alert('Failed to clear history.'); return }
+      } catch { alert('Network error.'); return }
+    } else {
+      try {
+        const res = await fetch(`/api/activity-history?id=all&tool_id=${toolId}`, { method: 'DELETE' })
+        if (!res.ok) { alert('Failed to clear history.'); return }
+      } catch { alert('Network error.'); return }
     }
 
     setAllHistory(prev => prev.filter(h => h.toolId !== toolId))
