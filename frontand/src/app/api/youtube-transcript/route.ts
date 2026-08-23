@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { YoutubeTranscript } from 'youtube-transcript'
-import * as he from 'he' // For HTML entity decoding, let's see if we need it
+
 
 // Manual fetcher bypassing EU consent
 async function fetchTranscriptManually(videoId: string) {
