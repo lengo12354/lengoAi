@@ -263,8 +263,7 @@ export default function Navbar() {
                         )}
                       </div>
 
-                      {hasHistory && (
-                        <Link
+                      <Link
                           href="/history"
                           onClick={() => setDropdownOpen(false)}
                           style={{
@@ -290,7 +289,6 @@ export default function Navbar() {
                           <History size={16} />
                           Activity History
                         </Link>
-                      )}
 
                       <button
                         onClick={async () => {
