@@ -8,18 +8,34 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'YouTube URL is required' }, { status: 400 })
     }
 
-    // Extract Video ID manually to handle /live/, /shorts/, and other URL formats correctly
     const videoIdMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/|live\/))([^"&?\/\s]{11})/i)
     const videoId = videoIdMatch ? videoIdMatch[1] : url
 
-    let transcriptResponse = await YoutubeTranscript.fetchTranscript(videoId).catch(() => null)
+    console.log('[YouTube Transcript] ==============================');
+    console.log('[YouTube Transcript] Received URL:', url);
+    console.log('[YouTube Transcript] Extracted Video ID:', videoId);
+    console.log('[YouTube Transcript] Environment:', { 
+       NODE_ENV: process.env.NODE_ENV,
+       VERCEL: process.env.VERCEL,
+       VERCEL_ENV: process.env.VERCEL_ENV
+    });
+
+    console.log('[YouTube Transcript] Attempting default fetch...');
+    let transcriptResponse = await YoutubeTranscript.fetchTranscript(videoId).catch(err => {
+      console.error('[YouTube Transcript] Default fetch failed with error:', err.message || err);
+      return null;
+    })
     
     if (!transcriptResponse || transcriptResponse.length === 0) {
-      // Fallback: try fetching explicitly by common languages if default fails
+      console.log('[YouTube Transcript] Default fetch empty or failed, trying fallbacks...');
       const fallbackLangs = ['en', 'ar', 'fr', 'es', 'pt', 'de', 'hi', 'ja']
       for (const lang of fallbackLangs) {
-        transcriptResponse = await YoutubeTranscript.fetchTranscript(videoId, { lang }).catch(() => null)
+        transcriptResponse = await YoutubeTranscript.fetchTranscript(videoId, { lang }).catch(err => {
+          console.error(`[YouTube Transcript] Fallback lang '${lang}' failed:`, err.message || err);
+          return null;
+        })
         if (transcriptResponse && transcriptResponse.length > 0) {
+          console.log(`[YouTube Transcript] Success with fallback lang: ${lang}`);
           break
         }
       }
